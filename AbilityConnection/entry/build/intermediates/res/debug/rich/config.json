@@ -1,0 +1,88 @@
+{
+    "app": {
+        "apiVersion": {
+            "compatible": 4,
+            "releaseType": "Release",
+            "target": 5
+        },
+        "bundleName": "com.starrypay",
+        "version": {
+            "code": 2000000,
+            "name": "2.0"
+        }
+    },
+    "deviceConfig": {
+        
+    },
+    "module": {
+        "abilities": [
+            {
+                "iconId": 16777219,
+                "orientation": "portrait",
+                "visible": true,
+                "icon": "$media:icon",
+                "description": "$string:mainability_description",
+                "formsEnabled": false,
+                "label": "$string:app_name",
+                "type": "page",
+                "homeAbility": true,
+                "skills": [
+                    {
+                        "entities": [
+                            "entity.system.home"
+                        ],
+                        "actions": [
+                            "action.system.home"
+                        ]
+                    }
+                ],
+                "descriptionId": 16777218,
+                "labelId": 16777217,
+                "name": "com.starrypay.MainAbility",
+                "launchType": "standard"
+            },
+            {
+                "visible": true,
+                "backgroundModes": [
+                    "dataTransfer",
+                    "location"
+                ],
+                "name": "com.starrypay.DownloadServiceAbility",
+                "type": "service",
+                "homeAbility": false
+            },
+            {
+                "iconId": 16777219,
+                "orientation": "portrait",
+                "descriptionId": 16777216,
+                "visible": true,
+                "icon": "$media:icon",
+                "name": "com.starrypay.AnotherAbility",
+                "description": "$string:anotherability_description",
+                "formsEnabled": false,
+                "type": "page",
+                "homeAbility": false,
+                "launchType": "standard"
+            }
+        ],
+        "deviceType": [
+            "phone"
+        ],
+        "distro": {
+            "moduleType": "entry",
+            "installationFree": false,
+            "deliveryWithInstall": true,
+            "moduleName": "entry"
+        },
+        "package": "com.starrypay",
+        "name": ".MainAbility",
+        "reqCapabilities": [
+            "video_support"
+        ],
+        "reqPermissions": [
+            {
+                "name": "ohos.permission.INTERNET"
+            }
+        ]
+    }
+}

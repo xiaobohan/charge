@@ -1,0 +1,48 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply plugin: 'com.huawei.ohos.app'
+
+ohos {
+    signingConfigs {
+        debug {
+            storeFile file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/pay.p12')
+            storePassword '0000002418C5FF09F955F45455095646DCA8C70C3843FF9D9D78AEE512625EFCD2769D0339A5BDBAA286E83F0BD28C66FA4BC8E2'
+            keyAlias = 'mobile_pay'
+            keyPassword '000000249168C0DEDA70D2374F2560B65A1A0F1B60435D041B965BE304A172C97CCDA41F1617F485AEC557F5C58FF6DC1039D2B8'
+            signAlg = 'SHA256withECDSA'
+            profile file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/payDebug.p7b')
+            certpath file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/pay.cer')
+        }
+    }
+    compileSdkVersion 5
+    defaultConfig {
+        compatibleSdkVersion 4
+    }
+}
+
+buildscript {
+    repositories {
+        maven {
+            url 'https://repo.huaweicloud.com/repository/maven/'
+        }
+        maven {
+            url 'https://developer.huawei.com/repo/'
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.huawei.ohos:hap:2.4.4.2'
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            url 'https://repo.huaweicloud.com/repository/maven/'
+        }
+        maven {
+            url 'https://developer.huawei.com/repo/'
+        }
+        jcenter()
+    }
+}
+

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_content"
+    ohos:width="$float:grid_item_weight"
+    ohos:alignment="center"
+    ohos:bottom_margin="10vp"
+    ohos:top_margin="10vp"
+    ohos:background_element="$graphic:selector_item_phone_charge"
+    ohos:layout_direction="locale"
+    ohos:orientation="vertical">
+
+    <Text
+        ohos:top_margin="10vp"
+        ohos:id="$+id:price"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:max_text_lines="1"
+        ohos:text_alignment="center"
+        ohos:text_size="20vp"
+        ohos:text_color="#2759EE"/>
+
+    <Text
+        ohos:bottom_margin="10vp"
+        ohos:text_color="#2759EE"
+        ohos:id="$+id:chargeMoney"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:max_text_lines="1"
+        ohos:text_alignment="center"
+        ohos:text_size="14vp"/>
+
+</DirectionalLayout>

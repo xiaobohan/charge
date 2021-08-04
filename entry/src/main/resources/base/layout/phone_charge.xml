@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:background_element="#F5F5F5"
+    ohos:orientation="vertical">
+
+    <DirectionalLayout
+        xmlns:ohos="http://schemas.huawei.com/res/ohos"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:background_element="$graphic:bg_phone_charge"
+        ohos:margin="10vp"
+        ohos:orientation="vertical">
+
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:max_text_lines="1"
+            ohos:start_margin="$float:default_layout_margin"
+            ohos:text="默认号码(广东深圳联通)"
+            ohos:text_color="#666666"
+            ohos:text_size="14fp"
+            ohos:top_margin="$float:grid_layout_desc_top_margin"/>
+
+        <TextField
+            ohos:id="$+id:tfPhone"
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:bottom_margin="15vp"
+            ohos:hint="请输入充值的手机号码"
+            ohos:start_margin="$float:default_layout_margin"
+            ohos:text_color="#333333"
+            ohos:text_input_type="pattern_number"
+            ohos:text_size="18vp"
+            ohos:top_margin="20vp"/>
+
+    </DirectionalLayout>
+
+    <DependentLayout
+        ohos:id="$+id:app_content"
+        ohos:height="match_parent"
+        ohos:width="match_parent"
+        ohos:bottom_margin="$float:default_layout_margin"
+        ohos:end_margin="$float:default_layout_margin"
+        ohos:orientation="vertical"
+        ohos:start_margin="$float:default_layout_margin">
+
+        <ScrollView
+            ohos:id="$+id:grid_layout"
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:background_element="$graphic:bg_phone_charge">
+
+            <DirectionalLayout
+                ohos:height="match_content"
+                ohos:width="match_parent"
+                ohos:alignment="center"
+                ohos:orientation="vertical">
+
+                <Text
+                    ohos:height="match_content"
+                    ohos:width="match_parent"
+                    ohos:bottom_margin="10vp"
+                    ohos:max_text_lines="1"
+                    ohos:start_margin="$float:default_layout_margin"
+                    ohos:text="选择金额"
+                    ohos:text_color="#666666"
+                    ohos:text_size="14fp"
+                    ohos:top_margin="$float:grid_layout_desc_top_margin"/>
+
+                <com.starrypay.component.GridView
+                    ohos:id="$+id:grid_view"
+                    ohos:height="match_content"
+                    ohos:width="match_content"
+                    ohos:column_count="$integer:column_count"
+                    ohos:end_margin="$float:default_layout_margin"
+                    ohos:start_margin="$float:default_layout_margin"/>
+
+            </DirectionalLayout>
+
+        </ScrollView>
+
+        <DirectionalLayout
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:align_parent_bottom="true"
+            ohos:layout_direction="locale"
+            ohos:orientation="horizontal">
+
+            <Button
+                ohos:id="$+id:bottom_left_button"
+                ohos:height="$float:bottom_button_height"
+                ohos:width="match_parent"
+                ohos:background_element="$graphic:background_bottom_button"
+                ohos:margin="20vp"
+                ohos:text="立即充值"
+                ohos:text_color="#FFFFFF"
+                ohos:text_size="16fp"
+                ohos:top_margin="$float:bottom_button_top_margin"/>
+
+        </DirectionalLayout>
+
+    </DependentLayout>
+
+</DirectionalLayout>

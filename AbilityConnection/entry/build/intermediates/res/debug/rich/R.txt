@@ -1,0 +1,13 @@
+graphic button_background 0x1000004
+id cancel_task_button 0x1000007
+id launch_button 0x1000008
+id new_task_button 0x1000009
+id start_button 0x100000a
+id state_text 0x100000b
+id stop_button 0x100000c
+layout another_ability_slice 0x1000005
+layout main_ability_slice 0x1000006
+media icon 0x1000003
+string anotherability_description 0x1000000
+string app_name 0x1000001
+string mainability_description 0x1000002

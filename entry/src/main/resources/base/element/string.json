@@ -1,0 +1,36 @@
+{
+  "string": [
+    {
+      "name": "entry_MainAbility",
+      "value": "手机充值"
+    },
+    {
+      "name": "mainability_description",
+      "value": "Java_Grid Page Ability"
+    },
+    {
+      "name": "title_text",
+      "value": "手机充值"
+    },
+    {
+      "name": "grid_item_text",
+      "value": "Text"
+    },
+    {
+      "name": "grid_layout_desc_text",
+      "value": "Description text Description text Description text Description text"
+    },
+    {
+      "name": "bottom_button_text",
+      "value": "Button"
+    },
+    {
+      "name": "widget_title",
+      "value": "Title"
+    },
+    {
+      "name": "widget_introduction",
+      "value": "Introduction"
+    }
+  ]
+}

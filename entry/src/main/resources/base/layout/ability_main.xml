@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:id="$+id:root_layout"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical">
+
+    <Text
+        ohos:id="$+id:title"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:layout_alignment="horizontal_center"
+        ohos:left_margin="10vp"
+        ohos:text="$string:title_text"
+        ohos:text_alignment="horizontal_center"
+        ohos:text_color="$color:title_text_color"
+        ohos:text_size="$float:title_text_size"
+        ohos:top_margin="10vp"/>
+
+    <TabList
+        ohos:id="$+id:tab_list"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:layout_alignment="center"
+        ohos:left_margin="5vp"
+        ohos:normal_text_color="#676767"
+        ohos:orientation="horizontal"
+        ohos:selected_tab_indicator_color="#2759EE"
+        ohos:selected_tab_indicator_height="2vp"
+        ohos:selected_text_color="#2759EE"
+        ohos:tab_length="60vp"
+        ohos:tab_margin="12vp"
+        ohos:text_alignment="center"
+        ohos:text_size="15fp"
+        ohos:top_margin="20vp"/>
+
+    <include
+        xmlns:ohos="http://schemas.huawei.com/res/ohos"
+        ohos:id="$+id:phoneCharge"
+        ohos:height="match_parent"
+        ohos:width="match_parent"
+        ohos:layout="$layout:phone_charge"/>
+
+<!--    <include-->
+<!--        xmlns:ohos="http://schemas.huawei.com/res/ohos"-->
+<!--        ohos:id="$+id:record"-->
+<!--        ohos:height="match_parent"-->
+<!--        ohos:width="match_parent"-->
+<!--        ohos:layout="$layout:app_bar_layout"/>-->
+
+</DirectionalLayout>
