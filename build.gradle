@@ -13,6 +13,15 @@ ohos {
             profile file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/payDebug.p7b')
             certpath file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/pay.cer')
         }
+        release {
+            storeFile file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/pay.p12')
+            storePassword '00000024985D9644A27995DADA434158E22FEA23D171612A3D7364945F070F11022379BB3581311176A2908EA739332A1B709E68'
+            keyAlias = 'mobile_pay'
+            keyPassword '000000246695728555581084506E7137C6AEB3ADDCD33747E4CF5B653671C98A935FB0C801CFAA942F0C8E7CE04111D5581D52C5'
+            signAlg = 'SHA256withECDSA'
+            profile file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/payDebug.p7b')
+            certpath file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/pay.cer')
+        }
     }
     compileSdkVersion 5
     defaultConfig {

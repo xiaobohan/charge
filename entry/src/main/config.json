@@ -13,11 +13,13 @@
     "name": "com.starrypay.MyApplication",
     "mainAbility": "com.starrypay.MainAbility",
     "metaData": {
-        "customizeData": [{
-          "name":"hwc-theme",
+      "customizeData": [
+        {
+          "name": "hwc-theme",
           "value": "androidhwext:style/Theme.Emui.Light.NoTitleBar",
           "extra": ""
-        }]
+        }
+      ]
     },
     "deviceType": [
       "phone"

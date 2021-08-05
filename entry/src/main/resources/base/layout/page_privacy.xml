@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_parent"
+    ohos:width="match_parent"
+    ohos:orientation="vertical">
+
+    <StackLayout
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:padding="15vp">
+
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:text="隐私政策"
+            ohos:text_alignment="center"
+            ohos:text_color="#000000"
+            ohos:text_size="20fp"/>
+
+        <Image
+            ohos:id="$+id:imageBack"
+            ohos:image_src="$media:back"
+            ohos:height="match_content"
+            ohos:width="match_content"/>
+
+    </StackLayout>
+
+
+    <ScrollView
+        ohos:height="match_parent"
+        ohos:width="match_parent"
+        ohos:padding="15vp"
+        ohos:rebound_effect="true">
+
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_parent"
+            ohos:multiple_lines="true"
+            ohos:text="$string:privacy_content"
+            ohos:text_color="#333333"
+            ohos:text_size="14fp"/>
+
+    </ScrollView>
+
+</DirectionalLayout>

@@ -2,6 +2,8 @@ package com.starrypay;
 
 import com.starrypay.myapplication.widget.controller.*;
 import com.starrypay.slice.MainAbilitySlice;
+import com.starrypay.slice.PrivacyAbilitySlice;
+import com.starrypay.slice.SplashSlice;
 import ohos.aafwk.ability.Ability;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.ability.ProviderFormInfo;
@@ -21,7 +23,11 @@ public class MainAbility extends Ability {
     @Override
     public void onStart(Intent intent) {
         super.onStart(intent);
-        super.setMainRoute(MainAbilitySlice.class.getName());
+        super.setMainRoute(SplashSlice.class.getName());
+
+        addActionRoute("aciton.main,",MainAbilitySlice.class.getName());
+        addActionRoute("aciton.privacy,", PrivacyAbilitySlice.class.getName());
+
         if (intentFromWidget(intent)) {
             topWidgetSlice = getRoutePageSlice(intent);
             if (topWidgetSlice != null) {
