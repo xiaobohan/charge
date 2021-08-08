@@ -22,37 +22,49 @@ public class GridAdapter {
 
     private final List<Component> componentList = new ArrayList<>();
 
+    public List<GridItemInfo> itemInfos;
+
     public GridAdapter(Context context, List<GridItemInfo> itemInfos) {
+        this.itemInfos = itemInfos;
         int itemPx = getItemWidthByScreen(context);
         for (GridItemInfo item : itemInfos) {
             Component gridItem = LayoutScatter.getInstance(context).parse(ResourceTable.Layout_grid_item, null, false);
-            gridItem.setTag(item.getTag());
 
-            gridItem.setSelected(item.isSelect());
-
-            if (gridItem.findComponentById(ResourceTable.Id_price) instanceof Text) {
-                Text textItem = (Text) gridItem.findComponentById(ResourceTable.Id_price);
-                if (item.isSelect()) {
-                    textItem.setTextColor(new Color(Color.rgb(39, 89, 238)));
-                }else{
-                    textItem.setTextColor(new Color(Color.rgb(51, 51, 51)));
-                }
-                textItem.setText(item.getOriginPrice());
-            }
-
-            if (gridItem.findComponentById(ResourceTable.Id_chargeMoney) instanceof Text) {
-                Text textItem = (Text) gridItem.findComponentById(ResourceTable.Id_chargeMoney);
-                if (item.isSelect()) {
-                    textItem.setTextColor(new Color(Color.rgb(39, 89, 238)));
-                }else{
-                    textItem.setTextColor(new Color(Color.rgb(51, 51, 51)));
-                }
-                textItem.setText(item.getChargePrice());
-            }
+            setData(item, gridItem);
 
             gridItem.setWidth(itemPx);
             gridItem.setMarginRight(AttrHelper.vp2px(GRID_ITEM_RIGHT_MARGIN, context));
             componentList.add(gridItem);
+        }
+    }
+
+    public void refreshData() {
+        for (int i = 0; i < getComponentList().size(); i++) {
+            setData(itemInfos.get(i), getComponentList().get(i));
+        }
+    }
+
+    public void setData(GridItemInfo item, Component gridItem) {
+        gridItem.setSelected(item.isSelect());
+
+        if (gridItem.findComponentById(ResourceTable.Id_price) instanceof Text) {
+            Text textItem = (Text) gridItem.findComponentById(ResourceTable.Id_price);
+            if (item.isSelect()) {
+                textItem.setTextColor(new Color(Color.rgb(39, 89, 238)));
+            } else {
+                textItem.setTextColor(new Color(Color.rgb(51, 51, 51)));
+            }
+            textItem.setText(item.getOriginPrice());
+        }
+
+        if (gridItem.findComponentById(ResourceTable.Id_chargeMoney) instanceof Text) {
+            Text textItem = (Text) gridItem.findComponentById(ResourceTable.Id_chargeMoney);
+            if (item.isSelect()) {
+                textItem.setTextColor(new Color(Color.rgb(39, 89, 238)));
+            } else {
+                textItem.setTextColor(new Color(Color.rgb(51, 51, 51)));
+            }
+            textItem.setText(item.getChargePrice());
         }
     }
 

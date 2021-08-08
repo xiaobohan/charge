@@ -7,7 +7,6 @@ public class GridItemInfo {
 
     private final String originPrice;
     private final String chargePrice;
-    private final String tag;
 
     private boolean isSelect = false;
 
@@ -15,20 +14,14 @@ public class GridItemInfo {
      * Item data model Constructor
      *
      * @param itemText item text
-     * @param tag      component tag
      */
-    public GridItemInfo(String itemText, String chargePrice, String tag) {
+    public GridItemInfo(String itemText, String chargePrice) {
         this.originPrice = itemText;
         this.chargePrice = chargePrice;
-        this.tag = tag;
     }
 
     public String getOriginPrice() {
         return originPrice;
-    }
-
-    public String getTag() {
-        return tag;
     }
 
     public String getChargePrice() {

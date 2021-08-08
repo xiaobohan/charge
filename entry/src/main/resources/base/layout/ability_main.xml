@@ -35,18 +35,24 @@
         ohos:text_size="15fp"
         ohos:top_margin="20vp"/>
 
-    <include
-        xmlns:ohos="http://schemas.huawei.com/res/ohos"
-        ohos:id="$+id:phoneCharge"
+    <PageSlider
+        ohos:id="$+id:slider"
         ohos:height="match_parent"
-        ohos:width="match_parent"
-        ohos:layout="$layout:phone_charge"/>
+        ohos:width="match_parent"/>
+
+<!--    <include-->
+<!--        xmlns:ohos="http://schemas.huawei.com/res/ohos"-->
+<!--        ohos:id="$+id:phoneCharge"-->
+<!--        ohos:height="match_parent"-->
+<!--        ohos:width="match_parent"-->
+<!--        ohos:layout="$layout:phone_charge"/>-->
 
 <!--    <include-->
 <!--        xmlns:ohos="http://schemas.huawei.com/res/ohos"-->
 <!--        ohos:id="$+id:record"-->
 <!--        ohos:height="match_parent"-->
 <!--        ohos:width="match_parent"-->
-<!--        ohos:layout="$layout:app_bar_layout"/>-->
+<!--        ohos:layout="$layout:page_charge_record"-->
+<!--        ohos:visibility="hide"/>-->
 
 </DirectionalLayout>

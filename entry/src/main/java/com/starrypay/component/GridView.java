@@ -2,6 +2,7 @@ package com.starrypay.component;
 
 import com.starrypay.provider.GridAdapter;
 import ohos.agp.components.AttrSet;
+import ohos.agp.components.Component;
 import ohos.agp.components.TableLayout;
 import ohos.app.Context;
 
@@ -24,13 +25,15 @@ public class GridView extends TableLayout {
     /**
      * The setAdapter
      *
-     * @param adapter             adapter
-     * @param longClickedListener longClickedListener
+     * @param adapter         adapter
+     * @param clickedListener longClickedListener
      */
-    void setAdapter(GridAdapter adapter, LongClickedListener longClickedListener) {
+    void setAdapter(GridAdapter adapter, ClickedListener clickedListener) {
         removeAllComponents();
         for (int i = 0; i < adapter.getComponentList().size(); i++) {
-            adapter.getComponentList().get(i).setLongClickedListener(longClickedListener);
+            Component component = adapter.getComponentList().get(i);
+            component.setTag(i);
+            component.setClickedListener(clickedListener);
             addComponent(adapter.getComponentList().get(i));
         }
     }

@@ -14,14 +14,19 @@ ohos {
             }
         }
     }
-    
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.har'])
     testImplementation 'junit:junit:4.13'
     ohosTestImplementation 'com.huawei.ohos.testkit:runner:1.0.0.100'
+
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
 }
 decc {
-    supportType = ['html','xml']
+    supportType = ['html', 'xml']
 }
