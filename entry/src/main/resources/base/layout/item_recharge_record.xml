@@ -24,14 +24,16 @@
             ohos:height="match_content"
             ohos:width="match_content"
             ohos:text_color="#666666"
-            ohos:text_size="16fp"/>
+            ohos:text_size="16fp"
+            ohos:top_margin="5vp"/>
 
         <Text
             ohos:id="$+id:time"
             ohos:height="match_content"
             ohos:width="match_content"
             ohos:text_color="#666666"
-            ohos:text_size="16fp"/>
+            ohos:text_size="16fp"
+            ohos:top_margin="5vp"/>
 
     </DirectionalLayout>
 
@@ -53,7 +55,8 @@
             ohos:height="match_content"
             ohos:width="match_content"
             ohos:text_color="#666666"
-            ohos:text_size="16fp"/>
+            ohos:text_size="16fp"
+            ohos:top_margin="5vp"/>
 
     </DirectionalLayout>
 
