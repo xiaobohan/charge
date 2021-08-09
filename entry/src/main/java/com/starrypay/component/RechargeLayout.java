@@ -1,33 +1,57 @@
 package com.starrypay.component;
 
+import com.huawei.paysdk.api.HuaweiPayImpl;
+import com.huawei.paysdk.entities.MercOrderApply;
+import com.huawei.paysdk.entities.PayResult;
 import com.starrypay.model.GridItemInfo;
 import com.starrypay.myapplication.ResourceTable;
 import com.starrypay.provider.GridAdapter;
 import com.starrypay.utils.AppUtils;
-import ohos.agp.components.Component;
-import ohos.agp.components.ComponentContainer;
-import ohos.agp.components.LayoutScatter;
+import ohos.agp.components.*;
+import ohos.eventhandler.EventHandler;
+import ohos.eventhandler.EventRunner;
+import ohos.eventhandler.InnerEvent;
+import ohos.telephony.PhoneNumberFormattingTextObserver;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RechargeLayout {
 
-    private ComponentContainer container;
     private Component rootView;
 
     private GridView phoneGridView;
+    private TextField etPhone;
+
+    private final EventHandler eventHandler = new EventHandler(EventRunner.getMainEventRunner()) {
+        @Override
+        protected void processEvent(InnerEvent event) {
+            if (event.object instanceof PayResult) {
+                PayResult payResult = (PayResult) event.object;
+
+
+            }
+        }
+    };
 
     public RechargeLayout(ComponentContainer container) {
-        this.container = container;
-        init();
+        init(container);
     }
 
-    private void init() {
+    private void init(ComponentContainer container) {
         rootView = LayoutScatter.getInstance(container.getContext())
                 .parse(ResourceTable.Layout_phone_charge, null, false);
 
         phoneGridView = (GridView) rootView.findComponentById(ResourceTable.Id_grid_view);
+        etPhone = (TextField) rootView.findComponentById(ResourceTable.Id_etPhone);
+        etPhone.addTextObserver(new Text.TextObserver() {
+            @Override
+            public void onTextUpdated(String s, int i, int i1, int i2) {
+                if (s.length() > 11) {
+                    etPhone.delete(1,true);
+                }
+            }
+        });
 
         initChargeList();
 
@@ -63,7 +87,7 @@ public class RechargeLayout {
 
         phoneGridView = (GridView) rootView.findComponentById(ResourceTable.Id_grid_view);
 
-        GridAdapter adapter = new GridAdapter(container.getContext(), upperItemList);
+        GridAdapter adapter = new GridAdapter(phoneGridView.getContext(), upperItemList);
 
         setAdapter(adapter);
         phoneGridView.setTag("");
@@ -84,4 +108,18 @@ public class RechargeLayout {
     public Component getRootView() {
         return rootView;
     }
+
+    public void doPay() {
+        MercOrderApply mercOrderApply = new MercOrderApply();
+
+        HuaweiPayImpl huaweiPay = new HuaweiPayImpl(getRootView().getContext(), true);
+        PayResult payResult = huaweiPay.pay(MercOrderApply.toJson(mercOrderApply));
+
+        InnerEvent event = InnerEvent.get();
+        event.object = payResult;
+
+        eventHandler.sendEvent(event);
+    }
+
+
 }

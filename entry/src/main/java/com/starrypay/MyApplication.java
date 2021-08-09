@@ -8,6 +8,6 @@ public class MyApplication extends AbilityPackage {
     public void onInitialize() {
         super.onInitialize();
 
-        HttpUtils.init("https://www.baidu.com");
+        HttpUtils.init("http://hm.starrypay.com/");
     }
 }

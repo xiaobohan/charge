@@ -7,8 +7,25 @@
       "name": "1.0.0"
     }
   },
-  "deviceConfig": {},
+  "deviceConfig": {
+    "default": {
+      "network": {
+        "cleartextTraffic": true
+      }
+    }
+  },
   "module": {
+    "reqPermissions": [
+      {
+        "name": "ohos.permission.GET_NETWORK_INFO"
+      },
+      {
+        "name": "ohos.permission.SET_NETWORK_INFO"
+      },
+      {
+        "name": "ohos.permission.INTERNET"
+      }
+    ],
     "package": "com.starrypay.myapplication",
     "name": "com.starrypay.MyApplication",
     "mainAbility": "com.starrypay.MainAbility",
@@ -44,7 +61,7 @@
         ],
         "orientation": "portrait",
         "name": "com.starrypay.MainAbility",
-        "icon": "$media:icon",
+        "icon": "$media:launcher",
         "description": "$string:mainability_description",
         "label": "$string:entry_MainAbility",
         "type": "page",

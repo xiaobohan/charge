@@ -25,13 +25,14 @@
             ohos:top_margin="$float:grid_layout_desc_top_margin"/>
 
         <TextField
-            ohos:id="$+id:tfPhone"
+            ohos:id="$+id:etPhone"
             ohos:height="match_content"
             ohos:width="match_parent"
             ohos:bottom_margin="15vp"
             ohos:hint="请输入充值的手机号码"
             ohos:start_margin="$float:default_layout_margin"
             ohos:text_color="#333333"
+            ohos:max_text_lines="1"
             ohos:text_input_type="pattern_number"
             ohos:text_size="18vp"
             ohos:top_margin="20vp"/>

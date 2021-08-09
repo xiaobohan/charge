@@ -97,7 +97,9 @@ public class RechargeRecordLayout {
 
             @Override
             public void onFailure(Call<BaseRespBean<List<RechargeRecordBean>>> call, Throwable throwable) {
-
+                new ToastDialog(rootView.getContext())
+                        .setContentText(throwable.getMessage())
+                        .show();
             }
         });
     }

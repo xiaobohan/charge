@@ -1,10 +1,12 @@
 package com.starrypay.http;
 
 import com.google.gson.Gson;
+import com.huawei.log.Logger;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -32,8 +34,13 @@ public class HttpUtils {
         builder.writeTimeout(Duration.ofSeconds(10));
         builder.connectTimeout(Duration.ofSeconds(10));
         builder.addInterceptor(interceptor);
+        builder.addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String s) {
+                Logger.d("okhttp",s,true);
+            }
+        }));
         OkHttpClient client = builder.build();
-
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(url)
