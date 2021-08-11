@@ -29,7 +29,6 @@ public class RechargeLayout {
             if (event.object instanceof PayResult) {
                 PayResult payResult = (PayResult) event.object;
 
-
             }
         }
     };

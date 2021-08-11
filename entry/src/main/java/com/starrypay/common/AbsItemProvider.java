@@ -26,7 +26,7 @@ public abstract class AbsItemProvider<T> extends ohos.agp.components.BaseItemPro
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return i;
     }
 
 }

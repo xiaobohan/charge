@@ -7,12 +7,14 @@ import com.starrypay.http.Apis;
 import com.starrypay.http.HttpUtils;
 import com.starrypay.myapplication.ResourceTable;
 import ohos.agp.components.*;
+import ohos.agp.text.Font;
 import ohos.agp.utils.Color;
 import ohos.agp.window.dialog.ToastDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RechargeRecordLayout {
@@ -31,8 +33,10 @@ public class RechargeRecordLayout {
             } else {
                 cpt = component;
             }
+
             RechargeRecordBean bean = dataList.get(i);
             Text phone = (Text) cpt.findComponentById(ResourceTable.Id_phone);
+            phone.setFont(Font.DEFAULT_BOLD);
             phone.setText(bean.mobile);
 
             Text desc = (Text) cpt.findComponentById(ResourceTable.Id_desc);
@@ -42,6 +46,7 @@ public class RechargeRecordLayout {
             time.setText(bean.createTime);
 
             Text amount = (Text) cpt.findComponentById(ResourceTable.Id_amount);
+            amount.setFont(Font.DEFAULT_BOLD);
             amount.setText(bean.getMontyStr());
 
             Text status = (Text) cpt.findComponentById(ResourceTable.Id_status);
@@ -70,8 +75,27 @@ public class RechargeRecordLayout {
                 .parse(ResourceTable.Layout_page_charge_record, null, false);
 
         ListContainer list = (ListContainer) rootView.findComponentById(ResourceTable.Id_list);
-
         list.setItemProvider(provider);
+
+        ArrayList<RechargeRecordBean> dataList = new ArrayList<>();
+
+        dataList.add(new RechargeRecordBean("18612341234","充值30块话费","2020.08.14 16:32",1,1,2997));
+        dataList.add(new RechargeRecordBean("18612341234","充值30块话费","2020.08.14 16:32",1,1,2997));
+        dataList.add(new RechargeRecordBean("18612341234","充值30块话费","2020.08.14 16:32",0,1,2997));
+
+        provider.refresh(dataList);
+
+        list.setBindStateChangedListener(new Component.BindStateChangedListener() {
+            @Override
+            public void onComponentBoundToWindow(Component component) {
+                // ListContainer初始化时数据统一在provider中创建，不直接调用这个接口；
+                // 建议在onComponentBoundToWindow监听或者其他事件监听中调用。
+                provider.notifyDataChanged();
+            }
+
+            @Override
+            public void onComponentUnboundFromWindow(Component component) {}
+        });
 
         container.addComponent(rootView);
     }
@@ -86,9 +110,9 @@ public class RechargeRecordLayout {
                     if (bean.isSuccess()) {
                         provider.refresh(bean.data);
                     } else {
-                        new ToastDialog(rootView.getContext())
-                                .setContentText(bean.message)
-                                .show();
+//                        new ToastDialog(rootView.getContext())
+//                                .setContentText(bean.message)
+//                                .show();
                     }
                 } catch (Exception e) {
 
@@ -97,9 +121,9 @@ public class RechargeRecordLayout {
 
             @Override
             public void onFailure(Call<BaseRespBean<List<RechargeRecordBean>>> call, Throwable throwable) {
-                new ToastDialog(rootView.getContext())
-                        .setContentText(throwable.getMessage())
-                        .show();
+//                new ToastDialog(rootView.getContext())
+//                        .setContentText(throwable.getMessage())
+//                        .show();
             }
         });
     }
