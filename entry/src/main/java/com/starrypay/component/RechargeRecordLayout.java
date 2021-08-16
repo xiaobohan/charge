@@ -68,6 +68,7 @@ public class RechargeRecordLayout {
         init();
 
         initData();
+
     }
 
     private void init() {

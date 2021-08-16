@@ -91,7 +91,7 @@
             ohos:orientation="horizontal">
 
             <Button
-                ohos:id="$+id:bottom_left_button"
+                ohos:id="$+id:btnPay"
                 ohos:height="$float:bottom_button_height"
                 ohos:width="match_parent"
                 ohos:background_element="$graphic:background_bottom_button"

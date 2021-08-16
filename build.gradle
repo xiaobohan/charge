@@ -37,11 +37,13 @@ buildscript {
         maven {
             url 'https://developer.huawei.com/repo/'
         }
-        jcenter()
+        maven {
+            url 'http://repo.ark.tools.huawei.com/artifactory/maven-public'
+        }
     }
     dependencies {
-        classpath 'com.huawei.ohos:hap:2.4.4.2'
-        classpath 'com.huawei.ohos:decctest:1.2.4.0'
+        classpath 'com.huawei.ohos:hap:2.4.5.0'
+        classpath 'com.huawei.ohos:decctest:1.2.4.1'
     }
 }
 
@@ -53,6 +55,8 @@ allprojects {
         maven {
             url 'https://developer.huawei.com/repo/'
         }
-        jcenter()
+        maven {
+            url 'http://repo.ark.tools.huawei.com/artifactory/maven-public'
+        }
     }
 }

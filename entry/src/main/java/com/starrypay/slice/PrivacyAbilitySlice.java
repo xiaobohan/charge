@@ -1,6 +1,5 @@
 package com.starrypay.slice;
 
-import com.starrypay.component.DragLayout;
 import com.starrypay.myapplication.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;

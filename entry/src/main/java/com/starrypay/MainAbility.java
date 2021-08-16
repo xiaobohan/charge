@@ -4,14 +4,17 @@ import com.starrypay.myapplication.widget.controller.*;
 import com.starrypay.slice.MainAbilitySlice;
 import com.starrypay.slice.PrivacyAbilitySlice;
 import com.starrypay.slice.SplashSlice;
+import com.starrypay.utils.DataKeyDef;
+import com.starrypay.utils.LocalConfigUtils;
 import ohos.aafwk.ability.Ability;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.ability.ProviderFormInfo;
+import ohos.aafwk.ability.fraction.FractionAbility;
 import ohos.aafwk.content.Intent;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
 
-public class MainAbility extends Ability {
+public class MainAbility extends FractionAbility {
     public static final int DEFAULT_DIMENSION_2X2 = 2;
     public static final int DIMENSION_1X2 = 1;
     public static final int DIMENSION_2X4 = 3;
@@ -23,10 +26,12 @@ public class MainAbility extends Ability {
     @Override
     public void onStart(Intent intent) {
         super.onStart(intent);
-        super.setMainRoute(SplashSlice.class.getName());
 
-        addActionRoute("aciton.main,",MainAbilitySlice.class.getName());
-        addActionRoute("aciton.privacy,", PrivacyAbilitySlice.class.getName());
+        if (LocalConfigUtils.getData(DataKeyDef.IS_SHOW_PRIVACY, true)) {
+            super.setMainRoute(SplashSlice.class.getName());
+        } else {
+            super.setMainRoute(MainAbilitySlice.class.getName());
+        }
 
         if (intentFromWidget(intent)) {
             topWidgetSlice = getRoutePageSlice(intent);

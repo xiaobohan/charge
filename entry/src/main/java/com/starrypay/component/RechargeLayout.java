@@ -1,17 +1,20 @@
 package com.starrypay.component;
 
+import com.huawei.log.Logger;
 import com.huawei.paysdk.api.HuaweiPayImpl;
 import com.huawei.paysdk.entities.MercOrderApply;
 import com.huawei.paysdk.entities.PayResult;
+import com.starrypay.bean.PhoneChargeInfoBean;
 import com.starrypay.model.GridItemInfo;
 import com.starrypay.myapplication.ResourceTable;
 import com.starrypay.provider.GridAdapter;
-import com.starrypay.utils.AppUtils;
+import com.starrypay.utils.ToastUtils;
 import ohos.agp.components.*;
 import ohos.eventhandler.EventHandler;
 import ohos.eventhandler.EventRunner;
 import ohos.eventhandler.InnerEvent;
-import ohos.telephony.PhoneNumberFormattingTextObserver;
+import ohos.hiviewdfx.HiLog;
+import ohos.hiviewdfx.HiLogLabel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +26,20 @@ public class RechargeLayout {
     private GridView phoneGridView;
     private TextField etPhone;
 
+    private static final HiLogLabel TAG = new HiLogLabel(HiLog.DEBUG, 0x0, "Pay");
+
     private final EventHandler eventHandler = new EventHandler(EventRunner.getMainEventRunner()) {
         @Override
         protected void processEvent(InnerEvent event) {
-            if (event.object instanceof PayResult) {
-                PayResult payResult = (PayResult) event.object;
-
+            try {
+                if (event.object instanceof PayResult) {
+                    PayResult payResult = (PayResult) event.object;
+                }
+            } catch (Exception e) {
+                ToastUtils.showToast("支付失败");
+                HiLog.error(TAG, Logger.getStackTraceString(e));
             }
+
         }
     };
 
@@ -47,18 +57,25 @@ public class RechargeLayout {
             @Override
             public void onTextUpdated(String s, int i, int i1, int i2) {
                 if (s.length() > 11) {
-                    etPhone.delete(1,true);
+                    etPhone.delete(1, true);
                 }
             }
         });
 
         initChargeList();
 
+        Button btnPay = (Button) rootView.findComponentById(ResourceTable.Id_btnPay);
+        btnPay.setClickedListener(component -> {
+            doPay();
+        });
+
         container.addComponent(rootView);
     }
 
     private void initChargeList() {
         List<GridItemInfo> upperItemList = new ArrayList<>();
+
+//        List<PhoneChargeInfoBean> upperItemList = new ArrayList<>();
 
         String[] moneyArr = new String[]{
                 "1元",
@@ -109,15 +126,20 @@ public class RechargeLayout {
     }
 
     public void doPay() {
-        MercOrderApply mercOrderApply = new MercOrderApply();
+        try {
+            MercOrderApply mercOrderApply = new MercOrderApply();
 
-        HuaweiPayImpl huaweiPay = new HuaweiPayImpl(getRootView().getContext(), true);
-        PayResult payResult = huaweiPay.pay(MercOrderApply.toJson(mercOrderApply));
+            HuaweiPayImpl huaweiPay = new HuaweiPayImpl(getRootView().getContext(), true);
+            PayResult payResult = huaweiPay.pay(MercOrderApply.toJson(mercOrderApply));
 
-        InnerEvent event = InnerEvent.get();
-        event.object = payResult;
+            InnerEvent event = InnerEvent.get();
+            event.object = payResult;
 
-        eventHandler.sendEvent(event);
+            eventHandler.sendEvent(event);
+        } catch (Exception e) {
+            ToastUtils.showToast("支付失败");
+            HiLog.error(TAG, Logger.getStackTraceString(e));
+        }
     }
 
 

@@ -1,7 +1,8 @@
 package com.starrypay.slice;
 
-import com.starrypay.component.DragLayout;
 import com.starrypay.myapplication.ResourceTable;
+import com.starrypay.utils.DataKeyDef;
+import com.starrypay.utils.LocalConfigUtils;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.*;
@@ -10,8 +11,6 @@ import ohos.agp.text.RichTextBuilder;
 import ohos.agp.text.TextForm;
 import ohos.agp.utils.Color;
 import ohos.agp.window.dialog.CommonDialog;
-import ohos.agp.window.dialog.IDialog;
-import ohos.agp.window.dialog.ToastDialog;
 import ohos.multimodalinput.event.TouchEvent;
 
 public class SplashSlice extends AbilitySlice {
@@ -21,7 +20,6 @@ public class SplashSlice extends AbilitySlice {
     public void onStart(Intent intent) {
         super.onStart(intent);
         super.setUIContent(new DirectionalLayout(this));
-
 
         showDialog(intent);
     }
@@ -64,6 +62,7 @@ public class SplashSlice extends AbilitySlice {
         });
         Button btnSubmit = (Button) rootLayout.findComponentById(ResourceTable.Id_btnSubmit);
         btnSubmit.setClickedListener(component -> {
+            LocalConfigUtils.putData(DataKeyDef.IS_SHOW_PRIVACY, false);
             dialog.destroy();
             present(new MainAbilitySlice(), intent);
             terminate();
