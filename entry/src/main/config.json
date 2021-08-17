@@ -35,6 +35,10 @@
           "name": "hwc-theme",
           "value": "androidhwext:style/Theme.Emui.Light.NoTitleBar",
           "extra": ""
+        },
+        {
+          "name": "com.huawei.hms.client.appid",
+          "value": "104592475"
         }
       ]
     },

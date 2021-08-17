@@ -1,8 +1,12 @@
 package com.starrypay.slice;
 
+import com.huawei.hms.accountsdk.support.account.result.AuthAccount;
 import com.starrypay.component.RechargeLayout;
 import com.starrypay.component.RechargeRecordLayout;
+import com.starrypay.http.RequestCallback;
+import com.starrypay.login.HuaweiLoginManager;
 import com.starrypay.myapplication.ResourceTable;
+import com.starrypay.utils.ContactUtils;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.*;
@@ -23,6 +27,13 @@ public class MainAbilitySlice extends AbilitySlice {
         //UI
         initTab();
         initPhoneCharge();
+
+//        requestPermissionsFromUser(new String[]{"ohos.permission.READ_CONTACTS"},200);
+    }
+
+    @Override
+    protected void onAbilityResult(int requestCode, int resultCode, Intent resultData) {
+        super.onAbilityResult(requestCode, resultCode, resultData);
     }
 
     @Override
@@ -34,7 +45,6 @@ public class MainAbilitySlice extends AbilitySlice {
     public void onForeground(Intent intent) {
         super.onForeground(intent);
     }
-
 
     private void initPhoneCharge() {
         slider = (PageSlider) findComponentById(ResourceTable.Id_slider);
@@ -117,6 +127,31 @@ public class MainAbilitySlice extends AbilitySlice {
                 }
             });
         }
+    }
+
+    private void doLogin() {
+        HuaweiLoginManager.login(new HuaweiLoginManager.LoginAccountCallback() {
+            @Override
+            public void onSuccess(AuthAccount authAccount) {
+                HuaweiLoginManager.loginToService(authAccount, new RequestCallback<String>() {
+                    @Override
+                    public void onSuccess(String respBean) {
+
+                    }
+
+                    @Override
+                    public void onFailed(int code, Throwable e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                String a = "";
+                String aa = "";
+            }
+        });
     }
 
 

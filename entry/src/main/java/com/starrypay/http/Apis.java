@@ -1,9 +1,11 @@
 package com.starrypay.http;
 
 import com.starrypay.bean.BaseRespBean;
+import com.starrypay.bean.LoginParamsBean;
 import com.starrypay.bean.PhoneChargeInfoBean;
 import com.starrypay.bean.RechargeRecordBean;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 
@@ -18,10 +20,10 @@ public interface Apis {
     public Call<BaseRespBean<List<RechargeRecordBean>>> getOrderList();
 
 
-
     @POST("hmApi/api/v1/1/queryGoods")
     public Call<BaseRespBean<List<PhoneChargeInfoBean>>> getShopList();
 
-
+    @POST("hmApi/api/v1/1/login")
+    public Call<BaseRespBean<String>> login(@Body LoginParamsBean bean);
 
 }

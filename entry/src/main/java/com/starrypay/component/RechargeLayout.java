@@ -4,10 +4,10 @@ import com.huawei.log.Logger;
 import com.huawei.paysdk.api.HuaweiPayImpl;
 import com.huawei.paysdk.entities.MercOrderApply;
 import com.huawei.paysdk.entities.PayResult;
-import com.starrypay.bean.PhoneChargeInfoBean;
 import com.starrypay.model.GridItemInfo;
 import com.starrypay.myapplication.ResourceTable;
 import com.starrypay.provider.GridAdapter;
+import com.starrypay.utils.GlobalTaskExecutor;
 import com.starrypay.utils.ToastUtils;
 import ohos.agp.components.*;
 import ohos.eventhandler.EventHandler;
@@ -126,20 +126,24 @@ public class RechargeLayout {
     }
 
     public void doPay() {
-        try {
-            MercOrderApply mercOrderApply = new MercOrderApply();
+        GlobalTaskExecutor.getInstance().IO(() -> {
+            try {
+                MercOrderApply mercOrderApply = new MercOrderApply();
 
-            HuaweiPayImpl huaweiPay = new HuaweiPayImpl(getRootView().getContext(), true);
-            PayResult payResult = huaweiPay.pay(MercOrderApply.toJson(mercOrderApply));
+                String js = "{\"allocationType\":\"NO_ALLOCATION\",\"authId\":\"104592475\",\"callbackUrl\":\"http://w3.huawei.com/next/indexa.html\",\"mercOrder\":{\"appId\":\"104592475\",\"bizType\":\"100002\",\"currency\":\"CNY\",\"goodsInfo\":{\"goodsDetail\":[{\"goodsNum\":8,\"goodsPrice\":1,\"goodsShortName\":\"衣服\"},{\"goodsNum\":1,\"goodsPrice\":100,\"goodsShortName\":\"裤子\"}],\"goodsListCnt\":2,\"goodsSum\":9},\"mercNo\":\"101610000031\",\"mercOrderNo\":\"PayCheckoutDemo_1621566619183\",\"totalAmount\":108,\"tradeSummary\":\"衣服裤子等商品\"},\"payload\":\"衣服裤子等商品\",\"returnUrl\":\"http://w3.huawei.com/next/indexa.html\",\"sign\":\"Am98RQA3hwVawPpJpSg7vwCFJg9/GWwbzwzFJPmThWIgxvbl2orHKqT4EBouRxCgntd59WqIlgUm\\nZgeyZaMmlkAh4ivV5fJXAC4Gt+2m9imDzlR8Yy5TmH0G7+MceDDSIhjgRKfOjXybnA4dlsU8rTpX\\npNDGojix4/E3L2gbo0s\\u003d\\n\",\"signType\":\"SHA256WithRSA/PSS\"}";
+                HuaweiPayImpl huaweiPay = new HuaweiPayImpl(getRootView().getContext(), true);
+//                PayResult payResult = huaweiPay.pay(MercOrderApply.toJson(mercOrderApply));
+                PayResult payResult = huaweiPay.pay(js);
 
-            InnerEvent event = InnerEvent.get();
-            event.object = payResult;
+                InnerEvent event = InnerEvent.get();
+                event.object = payResult;
 
-            eventHandler.sendEvent(event);
-        } catch (Exception e) {
-            ToastUtils.showToast("支付失败");
-            HiLog.error(TAG, Logger.getStackTraceString(e));
-        }
+                eventHandler.sendEvent(event);
+            } catch (Throwable e) {
+                ToastUtils.showToast("支付失败");
+                HiLog.error(TAG, Logger.getStackTraceString(e));
+            }
+        });
     }
 
 
