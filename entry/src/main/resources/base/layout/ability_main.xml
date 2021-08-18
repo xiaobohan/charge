@@ -6,17 +6,33 @@
     ohos:width="match_parent"
     ohos:orientation="vertical">
 
-    <Text
-        ohos:id="$+id:title"
+    <DependentLayout
         ohos:height="match_content"
-        ohos:width="match_parent"
-        ohos:layout_alignment="horizontal_center"
-        ohos:left_margin="10vp"
-        ohos:text="$string:title_text"
-        ohos:text_alignment="horizontal_center"
-        ohos:text_color="$color:title_text_color"
-        ohos:text_size="$float:title_text_size"
-        ohos:top_margin="10vp"/>
+        ohos:width="match_parent">
+
+        <Text
+            ohos:id="$+id:title"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:center_in_parent="true"
+            ohos:layout_alignment="horizontal_center"
+            ohos:left_margin="10vp"
+            ohos:text="$string:title_text"
+            ohos:text_alignment="horizontal_center"
+            ohos:text_color="$color:title_text_color"
+            ohos:text_size="$float:title_text_size"
+            ohos:top_margin="10vp"/>
+
+        <Image
+            ohos:height="30vp"
+            ohos:width="30vp"
+            ohos:image_src="$media:ic_logout"
+            ohos:id="$+id:ivLogout"
+            ohos:align_parent_end="true"
+            ohos:end_margin="15vp"
+            ohos:vertical_center="true"/>
+
+    </DependentLayout>
 
     <TabList
         ohos:id="$+id:tab_list"
@@ -40,19 +56,19 @@
         ohos:height="match_parent"
         ohos:width="match_parent"/>
 
-<!--    <include-->
-<!--        xmlns:ohos="http://schemas.huawei.com/res/ohos"-->
-<!--        ohos:id="$+id:phoneCharge"-->
-<!--        ohos:height="match_parent"-->
-<!--        ohos:width="match_parent"-->
-<!--        ohos:layout="$layout:phone_charge"/>-->
+    <!--    <include-->
+    <!--        xmlns:ohos="http://schemas.huawei.com/res/ohos"-->
+    <!--        ohos:id="$+id:phoneCharge"-->
+    <!--        ohos:height="match_parent"-->
+    <!--        ohos:width="match_parent"-->
+    <!--        ohos:layout="$layout:phone_charge"/>-->
 
-<!--    <include-->
-<!--        xmlns:ohos="http://schemas.huawei.com/res/ohos"-->
-<!--        ohos:id="$+id:record"-->
-<!--        ohos:height="match_parent"-->
-<!--        ohos:width="match_parent"-->
-<!--        ohos:layout="$layout:page_charge_record"-->
-<!--        ohos:visibility="hide"/>-->
+    <!--    <include-->
+    <!--        xmlns:ohos="http://schemas.huawei.com/res/ohos"-->
+    <!--        ohos:id="$+id:record"-->
+    <!--        ohos:height="match_parent"-->
+    <!--        ohos:width="match_parent"-->
+    <!--        ohos:layout="$layout:page_charge_record"-->
+    <!--        ohos:visibility="hide"/>-->
 
 </DirectionalLayout>

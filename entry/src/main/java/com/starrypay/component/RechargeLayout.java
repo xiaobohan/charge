@@ -5,21 +5,27 @@ import com.huawei.log.Logger;
 import com.huawei.paysdk.api.HuaweiPayImpl;
 import com.huawei.paysdk.entities.MercOrderApply;
 import com.huawei.paysdk.entities.PayResult;
-import com.starrypay.http.RequestCallback;
+import com.starrypay.bean.*;
+import com.starrypay.http.Apis;
+import com.starrypay.http.HttpUtils;
 import com.starrypay.login.HuaweiLoginManager;
-import com.starrypay.model.GridItemInfo;
 import com.starrypay.myapplication.ResourceTable;
 import com.starrypay.provider.GridAdapter;
+import com.starrypay.utils.DataKeyDef;
 import com.starrypay.utils.GlobalTaskExecutor;
 import com.starrypay.utils.ToastUtils;
+import com.starrypay.utils.sign.PayUtils;
 import ohos.agp.components.*;
-import ohos.eventhandler.EventHandler;
-import ohos.eventhandler.EventRunner;
-import ohos.eventhandler.InnerEvent;
+import ohos.agp.window.dialog.CommonDialog;
+import ohos.app.Context;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 
 public class RechargeLayout {
@@ -29,43 +35,39 @@ public class RechargeLayout {
     private GridView phoneGridView;
     private TextField etPhone;
 
+    private RechargeCallback callback;
+
+    private GridAdapter mAdapter;
+
     private static final HiLogLabel TAG = new HiLogLabel(HiLog.DEBUG, 0x0, "Pay");
-
-    private final EventHandler eventHandler = new EventHandler(EventRunner.getMainEventRunner()) {
-        @Override
-        protected void processEvent(InnerEvent event) {
-            try {
-                if (event.object instanceof PayResult) {
-                    PayResult payResult = (PayResult) event.object;
-                }
-            } catch (Exception e) {
-                ToastUtils.showToast("支付失败");
-                HiLog.error(TAG, Logger.getStackTraceString(e));
-            }
-
-        }
-    };
 
     public RechargeLayout(ComponentContainer container) {
         init(container);
+        getGoodList();
+    }
+
+    public void setCallback(RechargeCallback callback) {
+        this.callback = callback;
     }
 
     private void init(ComponentContainer container) {
         rootView = LayoutScatter.getInstance(container.getContext())
                 .parse(ResourceTable.Layout_phone_charge, null, false);
 
-        phoneGridView = (GridView) rootView.findComponentById(ResourceTable.Id_grid_view);
-        etPhone = (TextField) rootView.findComponentById(ResourceTable.Id_etPhone);
-        etPhone.addTextObserver(new Text.TextObserver() {
-            @Override
-            public void onTextUpdated(String s, int i, int i1, int i2) {
-                if (s.length() > 11) {
-                    etPhone.delete(1, true);
-                }
+        rootView.findComponentById(ResourceTable.Id_imgContact).setClickedListener(component -> {
+            if (callback != null) {
+                callback.clickContact();
             }
         });
 
-        initChargeList();
+
+        phoneGridView = (GridView) rootView.findComponentById(ResourceTable.Id_grid_view);
+        etPhone = (TextField) rootView.findComponentById(ResourceTable.Id_etPhone);
+        etPhone.addTextObserver((s, i, i1, i2) -> {
+            if (s.length() > 11) {
+                etPhone.delete(1, true);
+            }
+        });
 
         Button btnPay = (Button) rootView.findComponentById(ResourceTable.Id_btnPay);
         btnPay.setClickedListener(component -> {
@@ -75,79 +77,123 @@ public class RechargeLayout {
         container.addComponent(rootView);
     }
 
-    private void initChargeList() {
-        List<GridItemInfo> upperItemList = new ArrayList<>();
-
-//        List<PhoneChargeInfoBean> upperItemList = new ArrayList<>();
-
-        String[] moneyArr = new String[]{
-                "1元",
-                "2元",
-                "5元",
-                "10元",
-                "20元",
-                "30元"
-        };
-
-        String[] chargeArr = new String[]{
-                "售价1.1元",
-                "售价2.1元",
-                "售价5.1元",
-                "售价9.99元",
-                "售价19.98元",
-                "售价29.97元"
-        };
-
-        for (int i = 0; i < moneyArr.length; i++) {
-            upperItemList.add(new GridItemInfo(moneyArr[i], chargeArr[i]));
-        }
-
-        upperItemList.get(0).setSelect(true);
-
-        phoneGridView = (GridView) rootView.findComponentById(ResourceTable.Id_grid_view);
-
-        GridAdapter adapter = new GridAdapter(phoneGridView.getContext(), upperItemList);
-
-        setAdapter(adapter);
-        phoneGridView.setTag("");
-    }
-
     private void setAdapter(GridAdapter adapter) {
         phoneGridView.setAdapter(adapter, component -> {
             int tag = (int) component.getTag();
-            for (GridItemInfo info : adapter.itemInfos) {
+            for (PhoneChargeInfoBean info : adapter.itemInfos) {
                 info.setSelect(false);
             }
             adapter.itemInfos.get(tag).setSelect(true);
 
             adapter.refreshData();
         });
+        mAdapter = adapter;
     }
 
     public Component getRootView() {
         return rootView;
     }
 
+    private void getGoodList() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("goodsType", DataKeyDef.DATA_TYPE);
+        Callback<BaseRespBean<List<PhoneChargeInfoBean>>> callback = new Callback<BaseRespBean<List<PhoneChargeInfoBean>>>() {
+
+            private int retryTime = 0;
+
+            @Override
+            public void onResponse(Call<BaseRespBean<List<PhoneChargeInfoBean>>> call, Response<BaseRespBean<List<PhoneChargeInfoBean>>> response) {
+                GlobalTaskExecutor.getInstance().MAIN(() -> {
+                    BaseRespBean<List<PhoneChargeInfoBean>> body = response.body();
+                    if (body.isSuccess()) {
+                        List<PhoneChargeInfoBean> data = body.data;
+                        if (!data.isEmpty()) {
+                            data.get(0).setSelect(true);
+                        }
+                        setAdapter(new GridAdapter(rootView.getContext(), data));
+                    } else {
+                        onFailure(call, new Exception("server error"));
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<BaseRespBean<List<PhoneChargeInfoBean>>> call, Throwable throwable) {
+                retryTime++;
+                if (retryTime < 2) {
+                    HttpUtils.create(Apis.class)
+                            .getShopList(map)
+                            .enqueue(this);
+                }
+            }
+        };
+        HttpUtils.create(Apis.class)
+                .getShopList(map)
+                .enqueue(callback);
+    }
+
     public void doPay() {
-        boolean isLogin = HuaweiLoginManager.checkIsLogin();
-        if (isLogin){
-            doLogin();
+        boolean isLogin = HuaweiLoginManager.getInstance().checkIsLogin();
+        if (!isLogin) {
+            HuaweiLoginManager.getInstance().login(new HuaweiLoginManager.LoginAccountCallback() {
+
+                @Override
+                public void onSuccess(AuthAccount authAccount) {
+                    doPay();
+                }
+
+                @Override
+                public void onFailed(Throwable throwable) {
+
+                }
+            });
+            return;
+        }
+        if (mAdapter == null) {
+            return;
+        }
+        String phone = etPhone.getText().trim();
+        if (phone.length() != 11) {
+            ToastUtils.showToast("请检查手机号码格式");
+            return;
+        }
+        PhoneChargeInfoBean item = mAdapter.getSelectItem();
+        if (item == null) {
             return;
         }
 
+        HttpUtils.create(Apis.class)
+                .createOrder(new CreateOrderBean(HuaweiLoginManager.getInstance().getOpenId(), item.getGoodsId(), phone))
+                .enqueue(new Callback<BaseRespBean<OrderInfoBean>>() {
+                    @Override
+                    public void onResponse(Call<BaseRespBean<OrderInfoBean>> call, Response<BaseRespBean<OrderInfoBean>> response) {
+
+                        if (response.isSuccessful() && response.body().isSuccess()) {
+                            MercOrderApply orderApply = PayUtils.getMercOrderApply(response.body().data);
+                            launchHuaweiPay(orderApply);
+                        } else {
+                            onFailure(call, new Exception("server error"));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseRespBean<OrderInfoBean>> call, Throwable throwable) {
+                        ToastUtils.showToast("创建订单失败");
+                    }
+                });
+    }
+
+    private void launchHuaweiPay(MercOrderApply mercOrderApply) {
         GlobalTaskExecutor.getInstance().IO(() -> {
             try {
-                MercOrderApply mercOrderApply = new MercOrderApply();
+                HuaweiPayImpl huaweiPay = new HuaweiPayImpl(getRootView().getContext(), false);
+                PayResult payResult = huaweiPay.pay(MercOrderApply.toJson(mercOrderApply));
 
-                String js = "{\"allocationType\":\"NO_ALLOCATION\",\"authId\":\"104592475\",\"callbackUrl\":\"http://w3.huawei.com/next/indexa.html\",\"mercOrder\":{\"appId\":\"104592475\",\"bizType\":\"100002\",\"currency\":\"CNY\",\"goodsInfo\":{\"goodsDetail\":[{\"goodsNum\":8,\"goodsPrice\":1,\"goodsShortName\":\"衣服\"},{\"goodsNum\":1,\"goodsPrice\":100,\"goodsShortName\":\"裤子\"}],\"goodsListCnt\":2,\"goodsSum\":9},\"mercNo\":\"101610000031\",\"mercOrderNo\":\"PayCheckoutDemo_1621566619183\",\"totalAmount\":108,\"tradeSummary\":\"衣服裤子等商品\"},\"payload\":\"衣服裤子等商品\",\"returnUrl\":\"http://w3.huawei.com/next/indexa.html\",\"sign\":\"Am98RQA3hwVawPpJpSg7vwCFJg9/GWwbzwzFJPmThWIgxvbl2orHKqT4EBouRxCgntd59WqIlgUm\\nZgeyZaMmlkAh4ivV5fJXAC4Gt+2m9imDzlR8Yy5TmH0G7+MceDDSIhjgRKfOjXybnA4dlsU8rTpX\\npNDGojix4/E3L2gbo0s\\u003d\\n\",\"signType\":\"SHA256WithRSA/PSS\"}";
-                HuaweiPayImpl huaweiPay = new HuaweiPayImpl(getRootView().getContext(), true);
-//                PayResult payResult = huaweiPay.pay(MercOrderApply.toJson(mercOrderApply));
-                PayResult payResult = huaweiPay.pay(js);
-
-                InnerEvent event = InnerEvent.get();
-                event.object = payResult;
-
-                eventHandler.sendEvent(event);
+                if (PayResult.PAY_SUCCESS.equals(payResult.getReturnCode())) {
+                    GlobalTaskExecutor.getInstance().MAIN(this::showRechargeSuccessDialog);
+                } else {
+                    ToastUtils.showToast("支付失败");
+                }
             } catch (Throwable e) {
                 ToastUtils.showToast("支付失败");
                 HiLog.error(TAG, Logger.getStackTraceString(e));
@@ -155,31 +201,40 @@ public class RechargeLayout {
         });
     }
 
-
-    private void doLogin() {
-        HuaweiLoginManager.login(new HuaweiLoginManager.LoginAccountCallback() {
-            @Override
-            public void onSuccess(AuthAccount authAccount) {
-                HuaweiLoginManager.loginToService(authAccount, new RequestCallback<String>() {
-                    @Override
-                    public void onSuccess(String respBean) {
-
-                    }
-
-                    @Override
-                    public void onFailed(int code, Throwable e) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onFailed(Throwable throwable) {
-                String a = "";
-                String aa = "";
-            }
-        });
+    public void onContactSelect(Serializable data) {
+        if (data instanceof ContactBean) {
+            etPhone.setText(((ContactBean) data).phone);
+        }
     }
 
+
+    public interface RechargeCallback {
+
+        void clickContact();
+
+    }
+
+    private void showRechargeSuccessDialog() {
+        Context context = rootView.getContext();
+        CommonDialog dialog = new CommonDialog(context);
+
+        Component rootLayout = LayoutScatter.getInstance(context).parse(ResourceTable.Layout_dialog_recharge_success, null, false);
+        dialog.setSize(AttrHelper.vp2px(300, context), DirectionalLayout.LayoutConfig.MATCH_CONTENT);
+        dialog.setCornerRadius(AttrHelper.vp2px(10, context));
+
+        StringBuilder sb = new StringBuilder("您的手机充值已成功提交！具体到账时间以运营商为准。感谢您的使用！");
+
+        Text textContent = (Text) rootLayout.findComponentById(ResourceTable.Id_content);
+        textContent.setText(sb.toString());
+
+        Button btnSubmit = (Button) rootLayout.findComponentById(ResourceTable.Id_ok);
+        btnSubmit.setClickedListener(component -> {
+            dialog.destroy();
+        });
+
+        dialog.setContentCustomComponent(rootLayout);
+
+        dialog.show();
+    }
 
 }

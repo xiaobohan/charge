@@ -21,10 +21,10 @@ public class SplashSlice extends AbilitySlice {
         super.onStart(intent);
         super.setUIContent(new DirectionalLayout(this));
 
-        showDialog(intent);
+        showDialog();
     }
 
-    private void showDialog(Intent intent) {
+    private void showDialog() {
         CommonDialog dialog = new CommonDialog(this);
 
         Component rootLayout = LayoutScatter.getInstance(this).parse(ResourceTable.Layout_dialog_privacy, null, false);
@@ -46,7 +46,7 @@ public class SplashSlice extends AbilitySlice {
             @Override
             public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
                 dialog.destroy();
-                present(new PrivacyAbilitySlice(), intent);
+                present(new PrivacyAbilitySlice(), new Intent());
                 terminate();
                 return true;
             }
@@ -64,7 +64,7 @@ public class SplashSlice extends AbilitySlice {
         btnSubmit.setClickedListener(component -> {
             LocalConfigUtils.putData(DataKeyDef.IS_SHOW_PRIVACY, false);
             dialog.destroy();
-            present(new MainAbilitySlice(), intent);
+            present(new MainAbilitySlice(), new Intent());
             terminate();
         });
 

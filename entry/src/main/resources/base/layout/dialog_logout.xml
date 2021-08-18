@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_content"
+    ohos:width="match_parent"
+    ohos:background_element="$graphic:bg_dialog_logout"
+    ohos:orientation="vertical">
+
+    <Text
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:padding="30vp"
+        ohos:text="退出登录"
+        ohos:text_alignment="center"
+        ohos:text_color="#000000"
+        ohos:text_size="20fp"/>
+
+    <DirectionalLayout
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:alignment="center"
+        ohos:bottom_margin="10vp"
+        ohos:layout_alignment="center"
+        ohos:orientation="horizontal">
+
+        <Button
+            ohos:id="$+id:cancel"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:bottom_padding="15vp"
+            ohos:end_padding="40vp"
+            ohos:start_padding="40vp"
+            ohos:text="取消"
+            ohos:text_color="#3361EE"
+            ohos:text_size="16fp"
+            ohos:top_padding="15vp"/>
+
+        <Component
+            ohos:height="20vp"
+            ohos:width="2vp"
+            ohos:background_element="#3361EE"/>
+
+        <Button
+            ohos:id="$+id:btnSubmit"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:bottom_padding="15vp"
+            ohos:end_padding="40vp"
+            ohos:start_padding="40vp"
+            ohos:text="退出"
+            ohos:text_color="#3361EE"
+            ohos:text_size="16fp"
+            ohos:top_padding="15vp"/>
+
+    </DirectionalLayout>
+
+</DirectionalLayout>

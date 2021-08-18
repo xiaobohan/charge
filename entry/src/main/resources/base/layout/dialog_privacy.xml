@@ -15,9 +15,9 @@
         ohos:text_size="16fp"/>
 
     <DirectionalLayout
-        ohos:orientation="horizontal"
         ohos:height="match_content"
         ohos:width="match_parent"
+        ohos:orientation="horizontal"
         ohos:top_margin="15vp">
 
         <Button

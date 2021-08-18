@@ -15,9 +15,10 @@ public class MyApplication extends AbilityPackage {
 
         LocalConfigUtils.init(this);
         ToastUtils.initAppContenxt(this);
-        HttpUtils.init("http://hm.starrypay.com/");
+//        HttpUtils.init("http://hm.starrypay.com/");
+        HttpUtils.init("http://192.168.68.23:8022");
 
-        HuaweiLoginManager.initSdk(this);
+        HuaweiLoginManager.getInstance().initSdk(this);
     }
 
 }

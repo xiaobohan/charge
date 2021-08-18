@@ -1,6 +1,7 @@
 package com.starrypay;
 
 import com.starrypay.myapplication.widget.controller.*;
+import com.starrypay.slice.ContactSlice;
 import com.starrypay.slice.MainAbilitySlice;
 import com.starrypay.slice.PrivacyAbilitySlice;
 import com.starrypay.slice.SplashSlice;

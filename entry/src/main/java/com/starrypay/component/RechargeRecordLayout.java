@@ -1,26 +1,30 @@
 package com.starrypay.component;
 
 import com.starrypay.bean.BaseRespBean;
+import com.starrypay.bean.PageRespBean;
 import com.starrypay.bean.RechargeRecordBean;
 import com.starrypay.common.AbsItemProvider;
 import com.starrypay.http.Apis;
 import com.starrypay.http.HttpUtils;
+import com.starrypay.login.HuaweiLoginManager;
 import com.starrypay.myapplication.ResourceTable;
+import com.starrypay.utils.DataKeyDef;
+import com.starrypay.utils.ToastUtils;
 import ohos.agp.components.*;
 import ohos.agp.text.Font;
 import ohos.agp.utils.Color;
-import ohos.agp.window.dialog.ToastDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class RechargeRecordLayout {
 
     private ComponentContainer container;
     private Component rootView;
+
+    private Component dlNoLogin;
 
     private AbsItemProvider<RechargeRecordBean> provider = new AbsItemProvider<RechargeRecordBean>() {
 
@@ -68,23 +72,21 @@ public class RechargeRecordLayout {
         init();
 
         initData();
-
     }
 
     private void init() {
         rootView = LayoutScatter.getInstance(container.getContext())
                 .parse(ResourceTable.Layout_page_charge_record, null, false);
 
+        dlNoLogin = rootView.findComponentById(ResourceTable.Id_dlNoLogin);
+        onLoginStateChange(HuaweiLoginManager.getInstance().checkIsLogin());
+
+        rootView.findComponentById(ResourceTable.Id_btnToLogin).setClickedListener(component -> {
+            HuaweiLoginManager.getInstance().login(null);
+        });
+
         ListContainer list = (ListContainer) rootView.findComponentById(ResourceTable.Id_list);
         list.setItemProvider(provider);
-
-        ArrayList<RechargeRecordBean> dataList = new ArrayList<>();
-
-        dataList.add(new RechargeRecordBean("18612341234","充值30块话费","2020.08.14 16:32",1,1,2997));
-        dataList.add(new RechargeRecordBean("18612341234","充值30块话费","2020.08.14 16:32",1,1,2997));
-        dataList.add(new RechargeRecordBean("18612341234","充值30块话费","2020.08.14 16:32",0,1,2997));
-
-        provider.refresh(dataList);
 
         list.setBindStateChangedListener(new Component.BindStateChangedListener() {
             @Override
@@ -95,41 +97,48 @@ public class RechargeRecordLayout {
             }
 
             @Override
-            public void onComponentUnboundFromWindow(Component component) {}
+            public void onComponentUnboundFromWindow(Component component) {
+            }
         });
 
         container.addComponent(rootView);
     }
 
     private void initData() {
-        Apis apis = HttpUtils.create(Apis.class);
-        apis.getOrderList().enqueue(new Callback<BaseRespBean<List<RechargeRecordBean>>>() {
-            @Override
-            public void onResponse(Call<BaseRespBean<List<RechargeRecordBean>>> call, Response<BaseRespBean<List<RechargeRecordBean>>> response) {
-                try {
-                    BaseRespBean<List<RechargeRecordBean>> bean = response.body();
-                    if (bean.isSuccess()) {
-                        provider.refresh(bean.data);
-                    } else {
-//                        new ToastDialog(rootView.getContext())
-//                                .setContentText(bean.message)
-//                                .show();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("goodsType", DataKeyDef.DATA_TYPE);
+        map.put("openId", HuaweiLoginManager.getInstance().getOpenId());
+        HttpUtils.create(Apis.class)
+                .getOrderList(map)
+                .enqueue(new Callback<BaseRespBean<PageRespBean<RechargeRecordBean>>>() {
+                    @Override
+                    public void onResponse(Call<BaseRespBean<PageRespBean<RechargeRecordBean>>> call, Response<BaseRespBean<PageRespBean<RechargeRecordBean>>> response) {
+                        if (response.isSuccessful() && response.body().isSuccess()) {
+                            provider.refresh(response.body().data.list);
+                        } else {
+                            onFailure(call, new Exception("server error"));
+                        }
                     }
-                } catch (Exception e) {
 
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BaseRespBean<List<RechargeRecordBean>>> call, Throwable throwable) {
-//                new ToastDialog(rootView.getContext())
-//                        .setContentText(throwable.getMessage())
-//                        .show();
-            }
-        });
+                    @Override
+                    public void onFailure(Call<BaseRespBean<PageRespBean<RechargeRecordBean>>> call, Throwable throwable) {
+                        ToastUtils.showToast("网络异常");
+                    }
+                });
     }
 
     public Component getRootView() {
         return rootView;
     }
+
+
+    public void onLoginStateChange(boolean isLogin) {
+        if (isLogin) {
+            dlNoLogin.setVisibility(Component.HIDE);
+        } else {
+            dlNoLogin.setVisibility(Component.VISIBLE);
+        }
+    }
+
+
 }

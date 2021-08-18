@@ -5,7 +5,7 @@ public class PhoneChargeInfoBean {
     /**
      * 商品ID
      */
-    private Integer goodsId;
+    private int goodsId;
     /**
      * 商品结算单价
      */
@@ -28,18 +28,23 @@ public class PhoneChargeInfoBean {
     public String getMarketPrice() {
         return marketPrice;
     }
+
     public void setMarketPrice(String marketPrice) {
         this.marketPrice = marketPrice;
     }
-    public Integer getGoodsId() {
+
+    public int getGoodsId() {
         return goodsId;
     }
-    public void setGoodsId(Integer goodsId) {
+
+    public void setGoodsId(int goodsId) {
         this.goodsId = goodsId;
     }
+
     public String getGoodsPrice() {
         return goodsPrice;
     }
+
     public void setGoodsPrice(String goodsPrice) {
         this.goodsPrice = goodsPrice;
     }
@@ -47,14 +52,26 @@ public class PhoneChargeInfoBean {
     public String getGoodsName() {
         return goodsName;
     }
+
     public void setGoodsName(String goodsName) {
         this.goodsName = goodsName;
     }
+
     public String getGoodsInfo() {
         return goodsInfo;
     }
+
     public void setGoodsInfo(String goodsInfo) {
         this.goodsInfo = goodsInfo;
     }
 
+    private boolean isSelect = false;
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
 }

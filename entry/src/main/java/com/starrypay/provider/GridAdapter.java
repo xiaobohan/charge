@@ -1,5 +1,6 @@
 package com.starrypay.provider;
 
+import com.starrypay.bean.PhoneChargeInfoBean;
 import com.starrypay.model.GridItemInfo;
 import com.starrypay.myapplication.ResourceTable;
 import com.starrypay.utils.AppUtils;
@@ -22,12 +23,12 @@ public class GridAdapter {
 
     private final List<Component> componentList = new ArrayList<>();
 
-    public List<GridItemInfo> itemInfos;
+    public List<PhoneChargeInfoBean> itemInfos;
 
-    public GridAdapter(Context context, List<GridItemInfo> itemInfos) {
+    public GridAdapter(Context context, List<PhoneChargeInfoBean> itemInfos) {
         this.itemInfos = itemInfos;
         int itemPx = getItemWidthByScreen(context);
-        for (GridItemInfo item : itemInfos) {
+        for (PhoneChargeInfoBean item : itemInfos) {
             Component gridItem = LayoutScatter.getInstance(context).parse(ResourceTable.Layout_grid_item, null, false);
 
             setData(item, gridItem);
@@ -44,7 +45,7 @@ public class GridAdapter {
         }
     }
 
-    public void setData(GridItemInfo item, Component gridItem) {
+    public void setData(PhoneChargeInfoBean item, Component gridItem) {
         gridItem.setSelected(item.isSelect());
 
         if (gridItem.findComponentById(ResourceTable.Id_price) instanceof Text) {
@@ -54,7 +55,7 @@ public class GridAdapter {
             } else {
                 textItem.setTextColor(new Color(Color.rgb(51, 51, 51)));
             }
-            textItem.setText(item.getOriginPrice());
+            textItem.setText(item.getMarketPrice());
         }
 
         if (gridItem.findComponentById(ResourceTable.Id_chargeMoney) instanceof Text) {
@@ -64,8 +65,17 @@ public class GridAdapter {
             } else {
                 textItem.setTextColor(new Color(Color.rgb(51, 51, 51)));
             }
-            textItem.setText(item.getChargePrice());
+            textItem.setText("售价:" + item.getGoodsPrice());
         }
+    }
+
+    public PhoneChargeInfoBean getSelectItem(){
+        for (PhoneChargeInfoBean info : itemInfos) {
+            if (info.isSelect()){
+                return info;
+            }
+        }
+        return null;
     }
 
     /**

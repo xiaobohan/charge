@@ -1,34 +1,57 @@
 package com.starrypay.slice;
 
-import com.huawei.hms.accountsdk.support.account.result.AuthAccount;
 import com.starrypay.component.RechargeLayout;
 import com.starrypay.component.RechargeRecordLayout;
-import com.starrypay.http.RequestCallback;
 import com.starrypay.login.HuaweiLoginManager;
 import com.starrypay.myapplication.ResourceTable;
-import com.starrypay.utils.ContactUtils;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.*;
+import ohos.agp.window.dialog.CommonDialog;
 
 /**
  * MainAbility slice
  */
-public class MainAbilitySlice extends AbilitySlice {
+public class MainAbilitySlice extends AbilitySlice implements RechargeLayout.RechargeCallback, HuaweiLoginManager.LoginStateObserver {
+
+    private static final int CODE_CONTACT = 100;
 
     private TabList tabList;
 
     private PageSlider slider;
+
+    private Image imgLogout;
+
+    private RechargeLayout rechargeLayout;
+    private RechargeRecordLayout recordLayout;
 
     @Override
     public void onStart(Intent intent) {
         super.onStart(intent);
         super.setUIContent(ResourceTable.Layout_ability_main);
         //UI
+        imgLogout = (Image) findComponentById(ResourceTable.Id_ivLogout);
+        imgLogout.setClickedListener(component -> {
+            showLogoutDialog();
+        });
+
+        if (HuaweiLoginManager.getInstance().checkIsLogin()) {
+            imgLogout.setVisibility(Component.VISIBLE);
+        } else {
+            imgLogout.setVisibility(Component.HIDE);
+        }
+
         initTab();
         initPhoneCharge();
 
+        HuaweiLoginManager.getInstance().registerObserver(this);
 //        requestPermissionsFromUser(new String[]{"ohos.permission.READ_CONTACTS"},200);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        HuaweiLoginManager.getInstance().unRegisterObserver(this);
     }
 
     @Override
@@ -74,9 +97,16 @@ public class MainAbilitySlice extends AbilitySlice {
             public Object createPageInContainer(ComponentContainer componentContainer, int i) {
                 Component component = null;
                 if (i == 0) {
-                    component = new RechargeLayout(componentContainer).getRootView();
+                    if (rechargeLayout == null) {
+                        rechargeLayout = new RechargeLayout(componentContainer);
+                    }
+                    rechargeLayout.setCallback(MainAbilitySlice.this);
+                    component = rechargeLayout.getRootView();
                 } else {
-                    component = new RechargeRecordLayout(componentContainer).getRootView();
+                    if (recordLayout == null) {
+                        recordLayout = new RechargeRecordLayout(componentContainer);
+                    }
+                    component = recordLayout.getRootView();
                 }
                 return component;
             }
@@ -126,6 +156,60 @@ public class MainAbilitySlice extends AbilitySlice {
                 }
             });
         }
+    }
+
+    @Override
+    public void clickContact() {
+        presentForResult(new ContactSlice(), new Intent(), CODE_CONTACT);
+    }
+
+    @Override
+    protected void onResult(int requestCode, Intent resultIntent) {
+        super.onResult(requestCode, resultIntent);
+        if (requestCode == CODE_CONTACT && resultIntent != null) {
+            if (rechargeLayout != null) {
+                rechargeLayout.onContactSelect(resultIntent.getSerializableParam("data"));
+            }
+        }
+    }
+
+    @Override
+    public void onLogin() {
+        imgLogout.setVisibility(Component.VISIBLE);
+        if (recordLayout != null) {
+            recordLayout.onLoginStateChange(true);
+        }
+    }
+
+    @Override
+    public void onLogout() {
+        imgLogout.setVisibility(Component.HIDE);
+        if (recordLayout != null) {
+            recordLayout.onLoginStateChange(false);
+        }
+    }
+
+
+    private void showLogoutDialog() {
+        CommonDialog dialog = new CommonDialog(this);
+
+        Component rootLayout = LayoutScatter.getInstance(this).parse(ResourceTable.Layout_dialog_logout, null, false);
+        dialog.setSize(AttrHelper.vp2px(300, this), DirectionalLayout.LayoutConfig.MATCH_CONTENT);
+        dialog.setCornerRadius(AttrHelper.vp2px(10, this));
+
+        Button btnCancel = (Button) rootLayout.findComponentById(ResourceTable.Id_cancel);
+        btnCancel.setClickedListener(component -> {
+            dialog.destroy();
+        });
+        Button btnSubmit = (Button) rootLayout.findComponentById(ResourceTable.Id_btnSubmit);
+        btnSubmit.setClickedListener(component -> {
+            HuaweiLoginManager.getInstance().logout();
+            dialog.destroy();
+        });
+
+        dialog.setContentCustomComponent(rootLayout);
+
+        dialog.show();
     }
 
 }

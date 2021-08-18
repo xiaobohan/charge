@@ -4,30 +4,31 @@
     ohos:height="match_content"
     ohos:width="$float:grid_item_weight"
     ohos:alignment="center"
-    ohos:bottom_margin="10vp"
-    ohos:top_margin="10vp"
     ohos:background_element="$graphic:selector_item_phone_charge"
+    ohos:bottom_margin="10vp"
     ohos:layout_direction="locale"
-    ohos:orientation="vertical">
+    ohos:orientation="vertical"
+    ohos:top_margin="10vp">
 
     <Text
-        ohos:top_margin="10vp"
         ohos:id="$+id:price"
         ohos:height="match_content"
         ohos:width="match_parent"
         ohos:max_text_lines="1"
         ohos:text_alignment="center"
-        ohos:text_size="20vp"
-        ohos:text_color="#2759EE"/>
+        ohos:text_color="#2759EE"
+        ohos:text_size="20fp"
+        ohos:top_margin="10vp"/>
 
     <Text
-        ohos:bottom_margin="10vp"
-        ohos:text_color="#2759EE"
         ohos:id="$+id:chargeMoney"
         ohos:height="match_content"
         ohos:width="match_parent"
+        ohos:bottom_margin="10vp"
         ohos:max_text_lines="1"
         ohos:text_alignment="center"
-        ohos:text_size="14vp"/>
+        ohos:text_color="#2759EE"
+        ohos:text_size="14fp"
+        ohos:top_margin="5vp"/>
 
 </DirectionalLayout>

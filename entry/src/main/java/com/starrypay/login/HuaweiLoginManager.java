@@ -7,24 +7,33 @@ import com.huawei.hms.accountsdk.support.account.request.AccountAuthParamsHelper
 import com.huawei.hms.accountsdk.support.account.result.AuthAccount;
 import com.huawei.hms.accountsdk.support.account.service.AccountAuthService;
 import com.huawei.hms.accountsdk.support.account.tasks.Task;
-import com.starrypay.bean.BaseRespBean;
-import com.starrypay.bean.LoginParamsBean;
-import com.starrypay.http.Apis;
-import com.starrypay.http.HttpUtils;
-import com.starrypay.http.RequestCallback;
 import com.starrypay.utils.GlobalTaskExecutor;
 import ohos.aafwk.ability.AbilityPackage;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HuaweiLoginManager {
 
-    private static AbilityPackage sPkg;
+    private static volatile HuaweiLoginManager instance;
 
-    private static String token = "";
+    public static HuaweiLoginManager getInstance() {
+        if (instance == null) {
+            synchronized (HuaweiLoginManager.class) {
+                if (instance == null) {
+                    instance = new HuaweiLoginManager();
+                }
+            }
+        }
+        return instance;
+    }
 
-    public static void initSdk(AbilityPackage pkg) {
+    private AbilityPackage sPkg;
+
+    private String openId = "test";
+
+    private CopyOnWriteArrayList<LoginStateObserver> observers = new CopyOnWriteArrayList<LoginStateObserver>();
+
+    public void initSdk(AbilityPackage pkg) {
         sPkg = pkg;
         try {
             // 调用AccountAuthManager.init方法初始化
@@ -34,11 +43,11 @@ public class HuaweiLoginManager {
         }
     }
 
-    public static boolean checkIsLogin() {
-        return token == "" || token == null;
+    public boolean checkIsLogin() {
+        return isNotNullOrEmpty(openId);
     }
 
-    public static void login(LoginAccountCallback callback) {
+    public void login(LoginAccountCallback callback) {
         GlobalTaskExecutor.getInstance().IO().execute(() -> {
             AccountAuthParams accountAuthParams = new AccountAuthParamsHelper(AccountAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
                     .setMobileNumber()
@@ -49,9 +58,25 @@ public class HuaweiLoginManager {
 
                 Task<AuthAccount> sign = service.signIn();
                 sign.addOnSuccessListener(authAccount -> {
+                    String openId = authAccount.getOpenId();
+                    if (isNotNullOrEmpty(openId)) {
+                        this.openId = openId;
+                    } else {
+                        GlobalTaskExecutor.getInstance().MAIN(() -> {
+                            if (callback != null) {
+                                callback.onFailed(new Exception("open id is null`"));
+                            }
+                        });
+                        return;
+                    }
+
                     GlobalTaskExecutor.getInstance().MAIN(() -> {
                         if (callback != null) {
                             callback.onSuccess(authAccount);
+                        }
+
+                        for (LoginStateObserver observer : observers) {
+                            observer.onLogin();
                         }
                     });
                 });
@@ -72,6 +97,19 @@ public class HuaweiLoginManager {
         });
     }
 
+    public void logout() {
+        openId = "";
+        GlobalTaskExecutor.getInstance().MAIN(() -> {
+            for (LoginStateObserver observer : observers) {
+                observer.onLogout();
+            }
+        });
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
     public interface LoginAccountCallback {
 
         void onSuccess(AuthAccount authAccount);
@@ -80,37 +118,23 @@ public class HuaweiLoginManager {
 
     }
 
-    public static void loginToService(AuthAccount account, RequestCallback<String> callback) {
-        LoginParamsBean bean = new LoginParamsBean();
-        bean.setDisplayName(account.getDisplayName());
-        bean.setEmail(account.getEmail());
-        bean.setHeadPictureURL(account.getAvatarUriString());
+    public void registerObserver(LoginStateObserver observer) {
+        observers.add(observer);
+    }
 
-        HttpUtils.create(Apis.class)
-                .login(bean)
-                .enqueue(new Callback<BaseRespBean<String>>() {
-                    @Override
-                    public void onResponse(Call<BaseRespBean<String>> call, Response<BaseRespBean<String>> response) {
-                        BaseRespBean<String> body = response.body();
-                        if (body.isSuccess()) {
-                            token = body.data;
-                            if (callback != null) {
-                                callback.onSuccess(token);
-                            }
-                        } else {
-                            if (callback != null) {
-                                callback.onFailed(body.code, new Exception("service failed"));
-                            }
-                        }
-                    }
+    public void unRegisterObserver(LoginStateObserver observer) {
+        observers.remove(observer);
+    }
 
-                    @Override
-                    public void onFailure(Call<BaseRespBean<String>> call, Throwable throwable) {
-                        if (callback != null) {
-                            callback.onFailed(-1, throwable);
-                        }
-                    }
-                });
+    private boolean isNotNullOrEmpty(String str) {
+        return str != null && !"".equals(str);
+    }
+
+    public interface LoginStateObserver {
+
+        void onLogin();
+
+        void onLogout();
 
     }
 

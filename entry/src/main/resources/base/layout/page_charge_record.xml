@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<DirectionalLayout
+<StackLayout
     xmlns:ohos="http://schemas.huawei.com/res/ohos"
     ohos:height="match_parent"
     ohos:width="match_parent"
@@ -7,11 +7,47 @@
     ohos:orientation="vertical">
 
     <ListContainer
-        ohos:margin="20vp"
         ohos:id="$+id:list"
         ohos:height="match_content"
-        ohos:layout_alignment="vertical_center"
         ohos:width="match_parent"
-        ohos:background_element="$graphic:bg_phone_charge"/>
+        ohos:background_element="$graphic:bg_phone_charge"
+        ohos:layout_alignment="top"
+        ohos:margin="20vp"/>
 
-</DirectionalLayout>
+    <DirectionalLayout
+        ohos:id="$+id:dlNoLogin"
+        ohos:height="match_parent"
+        ohos:width="match_parent"
+        ohos:alignment="horizontal_center">
+
+        <Image
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:image_src="$media:ic_empty"
+            ohos:top_margin="80vp"/>
+
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:text="请授权登录华为账号"
+            ohos:text_color="#666666"
+            ohos:text_size="12fp"
+            ohos:top_margin="10vp"/>
+
+        <Button
+            ohos:id="$+id:btnToLogin"
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:background_element="$graphic:background_bottom_button"
+            ohos:bottom_padding="8vp"
+            ohos:end_padding="50vp"
+            ohos:start_padding="50vp"
+            ohos:text="去授权"
+            ohos:text_color="#FFFFFF"
+            ohos:text_size="18fp"
+            ohos:top_margin="20vp"
+            ohos:top_padding="8vp"/>
+
+    </DirectionalLayout>
+
+</StackLayout>
