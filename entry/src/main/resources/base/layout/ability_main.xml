@@ -20,7 +20,7 @@
 
     <TabList
         ohos:id="$+id:tab_list"
-        ohos:height="match_content"
+        ohos:height="35vp"
         ohos:width="match_parent"
         ohos:layout_alignment="center"
         ohos:left_margin="5vp"

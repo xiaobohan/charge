@@ -34,6 +34,10 @@ public class HuaweiLoginManager {
         }
     }
 
+    public static boolean checkIsLogin() {
+        return token == "" || token == null;
+    }
+
     public static void login(LoginAccountCallback callback) {
         GlobalTaskExecutor.getInstance().IO().execute(() -> {
             AccountAuthParams accountAuthParams = new AccountAuthParamsHelper(AccountAuthParams.DEFAULT_AUTH_REQUEST_PARAM)

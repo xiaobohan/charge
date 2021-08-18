@@ -1,9 +1,12 @@
 package com.starrypay.component;
 
+import com.huawei.hms.accountsdk.support.account.result.AuthAccount;
 import com.huawei.log.Logger;
 import com.huawei.paysdk.api.HuaweiPayImpl;
 import com.huawei.paysdk.entities.MercOrderApply;
 import com.huawei.paysdk.entities.PayResult;
+import com.starrypay.http.RequestCallback;
+import com.starrypay.login.HuaweiLoginManager;
 import com.starrypay.model.GridItemInfo;
 import com.starrypay.myapplication.ResourceTable;
 import com.starrypay.provider.GridAdapter;
@@ -126,6 +129,12 @@ public class RechargeLayout {
     }
 
     public void doPay() {
+        boolean isLogin = HuaweiLoginManager.checkIsLogin();
+        if (isLogin){
+            doLogin();
+            return;
+        }
+
         GlobalTaskExecutor.getInstance().IO(() -> {
             try {
                 MercOrderApply mercOrderApply = new MercOrderApply();
@@ -142,6 +151,32 @@ public class RechargeLayout {
             } catch (Throwable e) {
                 ToastUtils.showToast("支付失败");
                 HiLog.error(TAG, Logger.getStackTraceString(e));
+            }
+        });
+    }
+
+
+    private void doLogin() {
+        HuaweiLoginManager.login(new HuaweiLoginManager.LoginAccountCallback() {
+            @Override
+            public void onSuccess(AuthAccount authAccount) {
+                HuaweiLoginManager.loginToService(authAccount, new RequestCallback<String>() {
+                    @Override
+                    public void onSuccess(String respBean) {
+
+                    }
+
+                    @Override
+                    public void onFailed(int code, Throwable e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed(Throwable throwable) {
+                String a = "";
+                String aa = "";
             }
         });
     }

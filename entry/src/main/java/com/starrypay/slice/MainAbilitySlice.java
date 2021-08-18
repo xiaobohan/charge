@@ -106,7 +106,6 @@ public class MainAbilitySlice extends AbilitySlice {
                 tab.setText(s);
                 tab.setName(s);
                 tab.setMinWidth(64);
-                tab.setPadding(10, 10, 10, 10);
                 tabList.addTab(tab);
             }
             tabList.getTabAt(0).select();
@@ -128,31 +127,5 @@ public class MainAbilitySlice extends AbilitySlice {
             });
         }
     }
-
-    private void doLogin() {
-        HuaweiLoginManager.login(new HuaweiLoginManager.LoginAccountCallback() {
-            @Override
-            public void onSuccess(AuthAccount authAccount) {
-                HuaweiLoginManager.loginToService(authAccount, new RequestCallback<String>() {
-                    @Override
-                    public void onSuccess(String respBean) {
-
-                    }
-
-                    @Override
-                    public void onFailed(int code, Throwable e) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onFailed(Throwable throwable) {
-                String a = "";
-                String aa = "";
-            }
-        });
-    }
-
 
 }
