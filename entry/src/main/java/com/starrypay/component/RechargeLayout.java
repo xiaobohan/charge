@@ -5,6 +5,7 @@ import com.huawei.log.Logger;
 import com.huawei.paysdk.api.HuaweiPayImpl;
 import com.huawei.paysdk.entities.MercOrderApply;
 import com.huawei.paysdk.entities.PayResult;
+import com.starrypay.WalletUpgradeDialog;
 import com.starrypay.bean.*;
 import com.starrypay.common.NetWatcher;
 import com.starrypay.http.Apis;
@@ -219,6 +220,8 @@ public class RechargeLayout implements NetWatcher {
 
                 if (PayResult.PAY_SUCCESS.equals(payResult.getReturnCode())) {
                     GlobalTaskExecutor.getInstance().MAIN(this::showRechargeSuccessDialog);
+                } else if (PayResult.PAY_FAIL.equals(payResult.getReturnCode())) {
+                    new WalletUpgradeDialog(getRootView().getContext()).show();
                 } else {
                     ToastUtils.showToast("支付失败");
                 }

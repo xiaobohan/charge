@@ -8,7 +8,7 @@
     <Image
         ohos:height="match_parent"
         ohos:width="match_parent"
-        ohos:image_src="$media:car"
+        ohos:image_src="$media:card"
         ohos:scale_mode="stretch"/>
 
 <!--    <DirectionalLayout-->

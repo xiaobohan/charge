@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_content"
+    ohos:width="match_parent"
+    ohos:alignment="center"
+    ohos:orientation="vertical"
+    ohos:padding="25vp">
+
+    <Text
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:text="升级提醒"
+        ohos:text_color="#000000"
+        ohos:text_size="20fp"/>
+
+    <Text
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:multiple_lines="true"
+        ohos:text="为了保证支付功能正常，请将华为钱包升级到9.0.14.223及以上"
+        ohos:text_color="#333333"
+        ohos:text_size="14fp"
+        ohos:top_margin="20vp"/>
+
+    <Button
+        ohos:id="$+id:ok"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:background_element="$graphic:background_bottom_button"
+        ohos:bottom_padding="8vp"
+        ohos:end_margin="20vp"
+        ohos:start_margin="20vp"
+        ohos:text="去升级"
+        ohos:text_color="#FFFFFF"
+        ohos:text_size="18fp"
+        ohos:top_margin="20vp"
+        ohos:top_padding="8vp"/>
+
+</DirectionalLayout>
