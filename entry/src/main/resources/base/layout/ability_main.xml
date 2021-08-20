@@ -20,23 +20,23 @@
             ohos:text="$string:title_text"
             ohos:text_alignment="horizontal_center"
             ohos:text_color="$color:title_text_color"
-            ohos:text_size="$float:title_text_size"
+            ohos:text_size="22fp"
             ohos:top_margin="10vp"/>
 
         <Image
+            ohos:id="$+id:ivLogout"
             ohos:height="30vp"
             ohos:width="30vp"
-            ohos:image_src="$media:ic_logout"
-            ohos:id="$+id:ivLogout"
             ohos:align_parent_end="true"
             ohos:end_margin="15vp"
+            ohos:image_src="$media:ic_logout"
             ohos:vertical_center="true"/>
 
     </DependentLayout>
 
     <TabList
         ohos:id="$+id:tab_list"
-        ohos:height="35vp"
+        ohos:height="40vp"
         ohos:width="match_parent"
         ohos:layout_alignment="center"
         ohos:left_margin="5vp"
@@ -48,8 +48,7 @@
         ohos:tab_length="60vp"
         ohos:tab_margin="12vp"
         ohos:text_alignment="center"
-        ohos:text_size="15fp"
-        ohos:top_margin="20vp"/>
+        ohos:text_size="15fp"/>
 
     <PageSlider
         ohos:id="$+id:slider"

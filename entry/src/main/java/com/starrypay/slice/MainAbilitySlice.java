@@ -8,6 +8,11 @@ import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.*;
 import ohos.agp.window.dialog.CommonDialog;
+import ohos.bundle.IBundleManager;
+import ohos.net.NetHandle;
+import ohos.net.NetManager;
+import ohos.net.NetStatusCallback;
+import ohos.security.SystemPermission;
 
 /**
  * MainAbility slice
@@ -24,6 +29,19 @@ public class MainAbilitySlice extends AbilitySlice implements RechargeLayout.Rec
 
     private RechargeLayout rechargeLayout;
     private RechargeRecordLayout recordLayout;
+
+    private final NetStatusCallback netStatusCallback = new NetStatusCallback() {
+        @Override
+        public void onAvailable(NetHandle handle) {
+            super.onAvailable(handle);
+            if (rechargeLayout != null) {
+                rechargeLayout.onReconnect();
+            }
+            if (recordLayout != null) {
+                recordLayout.onReconnect();
+            }
+        }
+    };
 
     @Override
     public void onStart(Intent intent) {
@@ -45,13 +63,15 @@ public class MainAbilitySlice extends AbilitySlice implements RechargeLayout.Rec
         initPhoneCharge();
 
         HuaweiLoginManager.getInstance().registerObserver(this);
-//        requestPermissionsFromUser(new String[]{"ohos.permission.READ_CONTACTS"},200);
+
+        NetManager.getInstance(this).addDefaultNetStatusCallback(netStatusCallback);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         HuaweiLoginManager.getInstance().unRegisterObserver(this);
+        NetManager.getInstance(this).removeNetStatusCallback(netStatusCallback);
     }
 
     @Override
@@ -113,7 +133,7 @@ public class MainAbilitySlice extends AbilitySlice implements RechargeLayout.Rec
 
             @Override
             public void destroyPageFromContainer(ComponentContainer componentContainer, int i, Object o) {
-                componentContainer.removeComponent((Component) o);
+//                componentContainer.removeComponent((Component) o);
             }
 
             @Override
@@ -122,7 +142,6 @@ public class MainAbilitySlice extends AbilitySlice implements RechargeLayout.Rec
             }
 
         });
-
     }
 
     private void initTab() {
@@ -160,7 +179,11 @@ public class MainAbilitySlice extends AbilitySlice implements RechargeLayout.Rec
 
     @Override
     public void clickContact() {
-        presentForResult(new ContactSlice(), new Intent(), CODE_CONTACT);
+        if (verifySelfPermission(SystemPermission.READ_CONTACTS) != IBundleManager.PERMISSION_GRANTED) {
+            getAbility().requestPermissionsFromUser(new String[]{SystemPermission.READ_CONTACTS}, 0);
+        } else {
+            presentForResult(new ContactSlice(), new Intent(), CODE_CONTACT);
+        }
     }
 
     @Override
@@ -171,6 +194,7 @@ public class MainAbilitySlice extends AbilitySlice implements RechargeLayout.Rec
                 rechargeLayout.onContactSelect(resultIntent.getSerializableParam("data"));
             }
         }
+
     }
 
     @Override

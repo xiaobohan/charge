@@ -8,15 +8,14 @@ import ohos.aafwk.ability.AbilityPackage;
 
 public class MyApplication extends AbilityPackage {
 
-
     @Override
     public void onInitialize() {
         super.onInitialize();
 
         LocalConfigUtils.init(this);
         ToastUtils.initAppContenxt(this);
-//        HttpUtils.init("http://hm.starrypay.com/");
-        HttpUtils.init("http://192.168.68.23:8022");
+        HttpUtils.init("http://hm.starrypay.com/");
+//        HttpUtils.init("http://192.168.68.23:8022");
 
         HuaweiLoginManager.getInstance().initSdk(this);
     }

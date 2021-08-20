@@ -1,5 +1,6 @@
 package com.starrypay.utils;
 
+import com.example.library.github.promeg.pinyinhelper.Pinyin;
 import com.starrypay.bean.ContactBean;
 import com.starrypay.myapplication.ResourceTable;
 import ohos.aafwk.ability.DataAbilityHelper;
@@ -10,13 +11,10 @@ import ohos.security.permission.Permission;
 import ohos.utils.net.Uri;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ContactUtils {
-
-
-    public void requestPermission(Context context) {
-        context.requestPermissionsFromUser(new String[]{"ohos.permission.READ_CONTACTS"}, 200);
-    }
 
     public static ArrayList<ContactBean> getContacts(Context context) {
         ArrayList<ContactBean> resultList = new ArrayList<>();
@@ -34,11 +32,23 @@ public class ContactUtils {
                 resultList.add(new ContactBean(number, name));
             }
 
+            PinyinComparator comparator = new PinyinComparator();
+            resultList.sort(comparator);
+
         } catch (DataAbilityRemoteException e) {
             e.printStackTrace();
         }
 
         return resultList;
+    }
+
+    public static class PinyinComparator implements Comparator<ContactBean> {
+        public int compare(ContactBean o1, ContactBean o2) {
+            String str1 = Pinyin.toPinyin(o1.name, "*");
+            String str2 = Pinyin.toPinyin(o2.name, "*");
+            int flag = str1.compareTo(str2);
+            return flag;
+        }
     }
 
 }

@@ -14,13 +14,13 @@ ohos {
             certpath file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/pay.cer')
         }
         debug {
-            storeFile file('/Users/pakhungchan/.ohos/config/auto_debug_2850086000421502718.p12')
-            storePassword '000000185E09FB1F6518EFCDD808A6A42A434C64BBDF67DB3C2D219EA86F01EA1368B9D61658EDB5'
-            keyAlias = 'debugKey'
-            keyPassword '00000018324005601E49E423EFFE341BDF53FE68719A767B709D91AD768DD1DEB9804BBEDD36288A'
+            storeFile file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/pay.p12')
+            storePassword '00000024985D9644A27995DADA434158E22FEA23D171612A3D7364945F070F11022379BB3581311176A2908EA739332A1B709E68'
+            keyAlias = 'mobile_pay'
+            keyPassword '000000246695728555581084506E7137C6AEB3ADDCD33747E4CF5B653671C98A935FB0C801CFAA942F0C8E7CE04111D5581D52C5'
             signAlg = 'SHA256withECDSA'
-            profile file('/Users/pakhungchan/.ohos/config/auto_debug_starrypay_2850086000421502718.p7b')
-            certpath file('/Users/pakhungchan/.ohos/config/auto_debug_2850086000421502718.cer')
+            profile file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/pay_rDebug.p7b')
+            certpath file('/Users/pakhungchan/DevEcoStudioProjects/MyApplication/key/pay2.cer')
         }
     }
     compileSdkVersion 5

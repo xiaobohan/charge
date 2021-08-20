@@ -24,6 +24,9 @@
       },
       {
         "name": "ohos.permission.INTERNET"
+      },
+      {
+        "name": "ohos.permission.READ_CONTACTS"
       }
     ],
     "package": "com.starrypay.myapplication",
@@ -75,8 +78,7 @@
         "forms": [
           {
             "landscapeLayouts": [
-              "$layout:form_grid_pattern_widget_2_2",
-              "$layout:form_grid_pattern_widget_2_4"
+              "$layout:form_grid_pattern_widget_2_2"
             ],
             "isDefault": true,
             "scheduledUpdateTime": "10:30",
@@ -86,12 +88,10 @@
             "colorMode": "auto",
             "type": "Java",
             "supportDimensions": [
-              "2*2",
-              "2*4"
+              "2*2"
             ],
             "portraitLayouts": [
-              "$layout:form_grid_pattern_widget_2_2",
-              "$layout:form_grid_pattern_widget_2_4"
+              "$layout:form_grid_pattern_widget_2_2"
             ],
             "updateEnabled": true,
             "updateDuration": 1

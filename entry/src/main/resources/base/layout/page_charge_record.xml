@@ -14,11 +14,23 @@
         ohos:layout_alignment="top"
         ohos:margin="20vp"/>
 
+    <Text
+        ohos:id="$+id:noRecord"
+        ohos:height="match_content"
+        ohos:width="match_content"
+        ohos:layout_alignment="center"
+        ohos:padding="20vp"
+        ohos:text="暂无记录"
+        ohos:text_color="#333333"
+        ohos:text_size="16fp"
+        ohos:visibility="hide"/>
+
     <DirectionalLayout
         ohos:id="$+id:dlNoLogin"
         ohos:height="match_parent"
         ohos:width="match_parent"
-        ohos:alignment="horizontal_center">
+        ohos:alignment="horizontal_center"
+        ohos:visibility="hide">
 
         <Image
             ohos:height="match_content"
@@ -47,6 +59,28 @@
             ohos:text_size="18fp"
             ohos:top_margin="20vp"
             ohos:top_padding="8vp"/>
+
+    </DirectionalLayout>
+
+    <DirectionalLayout
+        ohos:id="$+id:dlNetError"
+        ohos:height="match_parent"
+        ohos:width="match_parent"
+        ohos:alignment="horizontal_center">
+
+        <Image
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:image_src="$media:ic_empty"
+            ohos:top_margin="80vp"/>
+
+        <Text
+            ohos:height="match_content"
+            ohos:width="match_content"
+            ohos:text="网络异常，请检查网络"
+            ohos:text_color="#666666"
+            ohos:text_size="12fp"
+            ohos:top_margin="10vp"/>
 
     </DirectionalLayout>
 

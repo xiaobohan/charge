@@ -69,9 +69,9 @@ public class GridAdapter {
         }
     }
 
-    public PhoneChargeInfoBean getSelectItem(){
+    public PhoneChargeInfoBean getSelectItem() {
         for (PhoneChargeInfoBean info : itemInfos) {
-            if (info.isSelect()){
+            if (info.isSelect()) {
                 return info;
             }
         }
@@ -95,4 +95,9 @@ public class GridAdapter {
                 - AttrHelper.vp2px(GRID_ITEM_RIGHT_MARGIN, context) * 3)
                 / AppUtils.getIntResource(context, ResourceTable.Integer_column_count);
     }
+
+    public boolean hasData() {
+        return itemInfos != null && itemInfos.size() > 0;
+    }
+
 }

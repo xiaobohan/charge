@@ -46,10 +46,10 @@
                 ohos:id="$+id:imgContact"
                 ohos:height="30vp"
                 ohos:width="30vp"
-                ohos:vertical_center="true"
                 ohos:align_parent_end="true"
                 ohos:end_margin="10vp"
-                ohos:image_src="$media:ic_contact"/>
+                ohos:image_src="$media:ic_contact"
+                ohos:vertical_center="true"/>
 
         </DependentLayout>
 
@@ -76,16 +76,36 @@
                 ohos:alignment="center"
                 ohos:orientation="vertical">
 
-                <Text
+                <DirectionalLayout
                     ohos:height="match_content"
                     ohos:width="match_parent"
-                    ohos:bottom_margin="10vp"
-                    ohos:max_text_lines="1"
-                    ohos:start_margin="$float:default_layout_margin"
-                    ohos:text="选择金额"
-                    ohos:text_color="#666666"
-                    ohos:text_size="14fp"
-                    ohos:top_margin="$float:grid_layout_desc_top_margin"/>
+                    ohos:orientation="horizontal">
+
+                    <Text
+                        ohos:height="match_content"
+                        ohos:width="match_content"
+                        ohos:bottom_margin="10vp"
+                        ohos:max_text_lines="1"
+                        ohos:start_margin="$float:default_layout_margin"
+                        ohos:text="选择金额"
+                        ohos:text_color="#333333"
+                        ohos:text_size="16fp"
+                        ohos:top_margin="$float:grid_layout_desc_top_margin"/>
+
+                    <Text
+                        ohos:id="$+id:networkError"
+                        ohos:height="match_content"
+                        ohos:width="match_content"
+                        ohos:bottom_margin="10vp"
+                        ohos:max_text_lines="1"
+                        ohos:start_margin="15vp"
+                        ohos:text="*网络异常"
+                        ohos:text_color="#FF0000"
+                        ohos:text_size="12fp"
+                        ohos:top_margin="$float:grid_layout_desc_top_margin"
+                        ohos:visibility="hide"/>
+
+                </DirectionalLayout>
 
                 <com.starrypay.component.GridView
                     ohos:id="$+id:grid_view"

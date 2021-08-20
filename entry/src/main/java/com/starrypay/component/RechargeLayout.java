@@ -6,6 +6,7 @@ import com.huawei.paysdk.api.HuaweiPayImpl;
 import com.huawei.paysdk.entities.MercOrderApply;
 import com.huawei.paysdk.entities.PayResult;
 import com.starrypay.bean.*;
+import com.starrypay.common.NetWatcher;
 import com.starrypay.http.Apis;
 import com.starrypay.http.HttpUtils;
 import com.starrypay.login.HuaweiLoginManager;
@@ -13,6 +14,7 @@ import com.starrypay.myapplication.ResourceTable;
 import com.starrypay.provider.GridAdapter;
 import com.starrypay.utils.DataKeyDef;
 import com.starrypay.utils.GlobalTaskExecutor;
+import com.starrypay.utils.NetUtils;
 import com.starrypay.utils.ToastUtils;
 import com.starrypay.utils.sign.PayUtils;
 import ohos.agp.components.*;
@@ -28,12 +30,13 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 
-public class RechargeLayout {
+public class RechargeLayout implements NetWatcher {
 
     private Component rootView;
 
     private GridView phoneGridView;
     private TextField etPhone;
+    private Component networkError;
 
     private RechargeCallback callback;
 
@@ -60,8 +63,8 @@ public class RechargeLayout {
             }
         });
 
-
         phoneGridView = (GridView) rootView.findComponentById(ResourceTable.Id_grid_view);
+
         etPhone = (TextField) rootView.findComponentById(ResourceTable.Id_etPhone);
         etPhone.addTextObserver((s, i, i1, i2) -> {
             if (s.length() > 11) {
@@ -73,6 +76,14 @@ public class RechargeLayout {
         btnPay.setClickedListener(component -> {
             doPay();
         });
+
+
+        networkError = rootView.findComponentById(ResourceTable.Id_networkError);
+        if (NetUtils.isNetworkConnected(rootView.getContext())) {
+            networkError.setVisibility(Component.HIDE);
+        } else {
+            networkError.setVisibility(Component.VISIBLE);
+        }
 
         container.addComponent(rootView);
     }
@@ -203,8 +214,18 @@ public class RechargeLayout {
 
     public void onContactSelect(Serializable data) {
         if (data instanceof ContactBean) {
-            etPhone.setText(((ContactBean) data).phone);
+            String phone = ((ContactBean) data).phone;
+            phone = phone.replace(" ", "");
+            etPhone.setText(phone);
         }
+    }
+
+    @Override
+    public void onReconnect() {
+        if (mAdapter == null || !mAdapter.hasData()) {
+            getGoodList();
+        }
+        GlobalTaskExecutor.getInstance().MAIN(() -> networkError.setVisibility(Component.HIDE));
     }
 
 

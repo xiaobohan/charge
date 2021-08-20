@@ -1,7 +1,5 @@
 package com.starrypay.common;
 
-import com.starrypay.bean.RechargeRecordBean;
-
 import java.util.ArrayList;
 import java.util.List;
 

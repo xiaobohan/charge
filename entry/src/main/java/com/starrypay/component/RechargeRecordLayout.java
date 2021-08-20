@@ -1,14 +1,18 @@
 package com.starrypay.component;
 
+import com.huawei.hms.accountsdk.support.account.result.AuthAccount;
 import com.starrypay.bean.BaseRespBean;
 import com.starrypay.bean.PageRespBean;
 import com.starrypay.bean.RechargeRecordBean;
 import com.starrypay.common.AbsItemProvider;
+import com.starrypay.common.NetWatcher;
 import com.starrypay.http.Apis;
 import com.starrypay.http.HttpUtils;
 import com.starrypay.login.HuaweiLoginManager;
 import com.starrypay.myapplication.ResourceTable;
 import com.starrypay.utils.DataKeyDef;
+import com.starrypay.utils.GlobalTaskExecutor;
+import com.starrypay.utils.NetUtils;
 import com.starrypay.utils.ToastUtils;
 import ohos.agp.components.*;
 import ohos.agp.text.Font;
@@ -19,12 +23,14 @@ import retrofit2.Response;
 
 import java.util.HashMap;
 
-public class RechargeRecordLayout {
+public class RechargeRecordLayout implements NetWatcher {
 
     private ComponentContainer container;
     private Component rootView;
 
     private Component dlNoLogin;
+    private Component networkError;
+    private Component noRecord;
 
     private AbsItemProvider<RechargeRecordBean> provider = new AbsItemProvider<RechargeRecordBean>() {
 
@@ -78,11 +84,19 @@ public class RechargeRecordLayout {
         rootView = LayoutScatter.getInstance(container.getContext())
                 .parse(ResourceTable.Layout_page_charge_record, null, false);
 
-        dlNoLogin = rootView.findComponentById(ResourceTable.Id_dlNoLogin);
-        onLoginStateChange(HuaweiLoginManager.getInstance().checkIsLogin());
 
         rootView.findComponentById(ResourceTable.Id_btnToLogin).setClickedListener(component -> {
-            HuaweiLoginManager.getInstance().login(null);
+            HuaweiLoginManager.getInstance().login(new HuaweiLoginManager.LoginAccountCallback() {
+                @Override
+                public void onSuccess(AuthAccount authAccount) {
+                    initData();
+                }
+
+                @Override
+                public void onFailed(Throwable throwable) {
+
+                }
+            });
         });
 
         ListContainer list = (ListContainer) rootView.findComponentById(ResourceTable.Id_list);
@@ -101,10 +115,30 @@ public class RechargeRecordLayout {
             }
         });
 
+        networkError = rootView.findComponentById(ResourceTable.Id_dlNetError);
+
+        boolean networkConnected = NetUtils.isNetworkConnected(rootView.getContext());
+        if (networkConnected) {
+            networkError.setVisibility(Component.HIDE);
+        } else {
+            networkError.setVisibility(Component.VISIBLE);
+        }
+
+        dlNoLogin = rootView.findComponentById(ResourceTable.Id_dlNoLogin);
+        if (networkConnected) {
+            onLoginStateChange(HuaweiLoginManager.getInstance().checkIsLogin());
+        }
+
+        noRecord = rootView.findComponentById(ResourceTable.Id_noRecord);
+        noRecord.setClickedListener(component -> initData());
+
         container.addComponent(rootView);
     }
 
     private void initData() {
+        if (!HuaweiLoginManager.getInstance().checkIsLogin()) {
+            return;
+        }
         HashMap<String, String> map = new HashMap<>();
         map.put("goodsType", DataKeyDef.DATA_TYPE);
         map.put("openId", HuaweiLoginManager.getInstance().getOpenId());
@@ -117,6 +151,11 @@ public class RechargeRecordLayout {
                             provider.refresh(response.body().data.list);
                         } else {
                             onFailure(call, new Exception("server error"));
+                        }
+                        if (provider.dataList.isEmpty()) {
+                            noRecord.setVisibility(Component.VISIBLE);
+                        } else {
+                            noRecord.setVisibility(Component.HIDE);
                         }
                     }
 
@@ -131,7 +170,6 @@ public class RechargeRecordLayout {
         return rootView;
     }
 
-
     public void onLoginStateChange(boolean isLogin) {
         if (isLogin) {
             dlNoLogin.setVisibility(Component.HIDE);
@@ -140,5 +178,18 @@ public class RechargeRecordLayout {
         }
     }
 
+
+    @Override
+    public void onReconnect() {
+        GlobalTaskExecutor.getInstance().MAIN(() -> {
+            networkError.setVisibility(Component.HIDE);
+            onLoginStateChange(HuaweiLoginManager.getInstance().checkIsLogin());
+            if (HuaweiLoginManager.getInstance().checkIsLogin()) {
+                if (provider.dataList.isEmpty()) {
+                    initData();
+                }
+            }
+        });
+    }
 
 }

@@ -29,9 +29,9 @@ public class HuaweiLoginManager {
 
     private AbilityPackage sPkg;
 
-    private String openId = "test";
+    private String openId = "";
 
-    private CopyOnWriteArrayList<LoginStateObserver> observers = new CopyOnWriteArrayList<LoginStateObserver>();
+    private final CopyOnWriteArrayList<LoginStateObserver> observers = new CopyOnWriteArrayList<LoginStateObserver>();
 
     public void initSdk(AbilityPackage pkg) {
         sPkg = pkg;
