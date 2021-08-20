@@ -18,15 +18,21 @@ import java.util.List;
  * The GridAdapter
  */
 public class GridAdapter {
-    private static final int GRID_LAYOUT_BORDER_MARGIN = 24;
-    private static final int GRID_ITEM_RIGHT_MARGIN = 8;
 
-    private final List<Component> componentList = new ArrayList<>();
+    protected static final int GRID_LAYOUT_BORDER_MARGIN = 24;
+    protected static final int GRID_ITEM_RIGHT_MARGIN = 8;
+
+    protected final List<Component> componentList = new ArrayList<>();
 
     public List<PhoneChargeInfoBean> itemInfos;
 
     public GridAdapter(Context context, List<PhoneChargeInfoBean> itemInfos) {
         this.itemInfos = itemInfos;
+
+        initItems(context);
+    }
+
+    protected void initItems(Context context) {
         int itemPx = getItemWidthByScreen(context);
         for (PhoneChargeInfoBean item : itemInfos) {
             Component gridItem = LayoutScatter.getInstance(context).parse(ResourceTable.Layout_grid_item, null, false);
@@ -55,7 +61,7 @@ public class GridAdapter {
             } else {
                 textItem.setTextColor(new Color(Color.rgb(51, 51, 51)));
             }
-            textItem.setText(item.getMarketPrice());
+            textItem.setText(item.getMarketPrice() + "元");
         }
 
         if (gridItem.findComponentById(ResourceTable.Id_chargeMoney) instanceof Text) {
@@ -65,7 +71,7 @@ public class GridAdapter {
             } else {
                 textItem.setTextColor(new Color(Color.rgb(51, 51, 51)));
             }
-            textItem.setText("售价:" + item.getGoodsPrice());
+            textItem.setText("售价:" + item.getGoodsPrice() + "元");
         }
     }
 
@@ -87,7 +93,7 @@ public class GridAdapter {
         return componentList;
     }
 
-    private int getItemWidthByScreen(Context context) {
+    protected int getItemWidthByScreen(Context context) {
         int screenWidth = AppUtils.getScreenInfo(context).getPointXToInt();
 
         return (screenWidth

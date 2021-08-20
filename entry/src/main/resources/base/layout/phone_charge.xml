@@ -15,11 +15,13 @@
         ohos:orientation="vertical">
 
         <Text
+            ohos:id="$+id:textChargeName"
             ohos:height="match_content"
             ohos:width="match_parent"
+            ohos:hint="默认号码"
+            ohos:hint_color="#666666"
             ohos:max_text_lines="1"
             ohos:start_margin="$float:default_layout_margin"
-            ohos:text="默认号码(广东深圳联通)"
             ohos:text_color="#666666"
             ohos:text_size="14fp"
             ohos:top_margin="$float:grid_layout_desc_top_margin"/>

@@ -129,8 +129,9 @@ public class RechargeRecordLayout implements NetWatcher {
             onLoginStateChange(HuaweiLoginManager.getInstance().checkIsLogin());
         }
 
-        noRecord = rootView.findComponentById(ResourceTable.Id_noRecord);
-        noRecord.setClickedListener(component -> initData());
+        noRecord = rootView.findComponentById(ResourceTable.Id_dlNoRecord);
+        rootView.findComponentById(ResourceTable.Id_noRecord)
+                .setClickedListener(component -> initData());
 
         container.addComponent(rootView);
     }
@@ -171,10 +172,14 @@ public class RechargeRecordLayout implements NetWatcher {
     }
 
     public void onLoginStateChange(boolean isLogin) {
-        if (isLogin) {
-            dlNoLogin.setVisibility(Component.HIDE);
-        } else {
-            dlNoLogin.setVisibility(Component.VISIBLE);
+        try {
+            if (isLogin) {
+                dlNoLogin.setVisibility(Component.HIDE);
+            } else {
+                dlNoLogin.setVisibility(Component.VISIBLE);
+                noRecord.setVisibility(Component.HIDE);
+            }
+        } catch (Exception ignored) {
         }
     }
 

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DirectionalLayout
+    xmlns:ohos="http://schemas.huawei.com/res/ohos"
+    ohos:height="match_content"
+    ohos:width="$float:grid_item_weight"
+    ohos:alignment="center"
+    ohos:background_element="$graphic:bg_item_charge_empty"
+    ohos:bottom_margin="10vp"
+    ohos:layout_direction="locale"
+    ohos:orientation="vertical"
+    ohos:top_margin="10vp">
+
+    <Text
+        ohos:id="$+id:price"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:max_text_lines="1"
+        ohos:text_alignment="center"
+        ohos:text_color="#999999"
+        ohos:text="- -"
+        ohos:text_size="20fp"
+        ohos:top_margin="10vp"/>
+
+    <Text
+        ohos:id="$+id:chargeMoney"
+        ohos:height="match_content"
+        ohos:width="match_parent"
+        ohos:bottom_margin="10vp"
+        ohos:max_text_lines="1"
+        ohos:text_alignment="center"
+        ohos:text_color="#999999"
+        ohos:text_size="14fp"
+        ohos:text="售价 --"
+        ohos:top_margin="5vp"/>
+
+</DirectionalLayout>

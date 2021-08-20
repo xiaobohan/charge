@@ -6,8 +6,11 @@ import com.huawei.hms.accountsdk.support.account.request.AccountAuthParams;
 import com.huawei.hms.accountsdk.support.account.request.AccountAuthParamsHelper;
 import com.huawei.hms.accountsdk.support.account.result.AuthAccount;
 import com.huawei.hms.accountsdk.support.account.service.AccountAuthService;
+import com.huawei.hms.accountsdk.support.account.tasks.OnFailureListener;
+import com.huawei.hms.accountsdk.support.account.tasks.OnSuccessListener;
 import com.huawei.hms.accountsdk.support.account.tasks.Task;
 import com.starrypay.utils.GlobalTaskExecutor;
+import com.starrypay.utils.ToastUtils;
 import ohos.aafwk.ability.AbilityPackage;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -99,9 +102,25 @@ public class HuaweiLoginManager {
 
     public void logout() {
         openId = "";
+        ToastUtils.showToast("已退出登录");
         GlobalTaskExecutor.getInstance().MAIN(() -> {
             for (LoginStateObserver observer : observers) {
                 observer.onLogout();
+            }
+        });
+        GlobalTaskExecutor.getInstance().IO(() -> {
+            AccountAuthParams accountAuthParams = new AccountAuthParamsHelper(AccountAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
+                    .setMobileNumber()
+                    .setAuthorizationCode()
+                    .createParams();
+            try {
+                AccountAuthService service = AccountAuthManager.getService(accountAuthParams);
+                Task<Void> signOut = service.signOut();
+//                signOut.addOnSuccessListener(unused -> {
+//                });
+//                signOut.addOnFailureListener(e -> {
+//                });
+            } catch (Exception ignored) {
             }
         });
     }

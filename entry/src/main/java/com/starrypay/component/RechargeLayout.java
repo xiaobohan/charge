@@ -11,6 +11,7 @@ import com.starrypay.http.Apis;
 import com.starrypay.http.HttpUtils;
 import com.starrypay.login.HuaweiLoginManager;
 import com.starrypay.myapplication.ResourceTable;
+import com.starrypay.provider.EmptyChargeAdapter;
 import com.starrypay.provider.GridAdapter;
 import com.starrypay.utils.DataKeyDef;
 import com.starrypay.utils.GlobalTaskExecutor;
@@ -27,6 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class RechargeLayout implements NetWatcher {
 
     private GridView phoneGridView;
     private TextField etPhone;
+    private Text textChargeName;
     private Component networkError;
 
     private RechargeCallback callback;
@@ -65,10 +68,23 @@ public class RechargeLayout implements NetWatcher {
 
         phoneGridView = (GridView) rootView.findComponentById(ResourceTable.Id_grid_view);
 
+        ArrayList<PhoneChargeInfoBean> list = new ArrayList<>();
+        list.add(new PhoneChargeInfoBean());
+        list.add(new PhoneChargeInfoBean());
+        list.add(new PhoneChargeInfoBean());
+        list.add(new PhoneChargeInfoBean());
+        list.add(new PhoneChargeInfoBean());
+        list.add(new PhoneChargeInfoBean());
+        EmptyChargeAdapter adapter = new EmptyChargeAdapter(rootView.getContext(), list);
+        phoneGridView.setAdapter(adapter, null);
+
         etPhone = (TextField) rootView.findComponentById(ResourceTable.Id_etPhone);
         etPhone.addTextObserver((s, i, i1, i2) -> {
             if (s.length() > 11) {
                 etPhone.delete(1, true);
+            }
+            if (s.length() < 11) {
+                textChargeName.setText("");
             }
         });
 
@@ -77,6 +93,7 @@ public class RechargeLayout implements NetWatcher {
             doPay();
         });
 
+        textChargeName = (Text) rootView.findComponentById(ResourceTable.Id_textChargeName);
 
         networkError = rootView.findComponentById(ResourceTable.Id_networkError);
         if (NetUtils.isNetworkConnected(rootView.getContext())) {
@@ -214,9 +231,10 @@ public class RechargeLayout implements NetWatcher {
 
     public void onContactSelect(Serializable data) {
         if (data instanceof ContactBean) {
-            String phone = ((ContactBean) data).phone;
-            phone = phone.replace(" ", "");
-            etPhone.setText(phone);
+            ContactBean bean = (ContactBean) data;
+            etPhone.setText(bean.phone.replace(" ", ""));
+
+            textChargeName.setText(bean.name);
         }
     }
 
