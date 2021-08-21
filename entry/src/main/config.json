@@ -84,7 +84,7 @@
             "scheduledUpdateTime": "10:30",
             "defaultDimension": "2*2",
             "name": "widget",
-            "description": "mobile",
+            "description": "$string:entry_MainAbility",
             "colorMode": "auto",
             "type": "Java",
             "supportDimensions": [

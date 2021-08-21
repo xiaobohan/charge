@@ -27,7 +27,7 @@ public class RechargeRecordBean {
     }
 
     public boolean isPay() {
-        return status == 1;
+        return status == 2;
     }
 
     public RechargeRecordBean() {

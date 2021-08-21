@@ -9,7 +9,9 @@ import com.huawei.hms.accountsdk.support.account.service.AccountAuthService;
 import com.huawei.hms.accountsdk.support.account.tasks.OnFailureListener;
 import com.huawei.hms.accountsdk.support.account.tasks.OnSuccessListener;
 import com.huawei.hms.accountsdk.support.account.tasks.Task;
+import com.starrypay.utils.DataKeyDef;
 import com.starrypay.utils.GlobalTaskExecutor;
+import com.starrypay.utils.LocalConfigUtils;
 import com.starrypay.utils.ToastUtils;
 import ohos.aafwk.ability.AbilityPackage;
 
@@ -61,6 +63,7 @@ public class HuaweiLoginManager {
 
                 Task<AuthAccount> sign = service.signIn();
                 sign.addOnSuccessListener(authAccount -> {
+                    LocalConfigUtils.putData(DataKeyDef.KEY_AUTO_LOGIN, true);
                     String openId = authAccount.getOpenId();
                     if (isNotNullOrEmpty(openId)) {
                         this.openId = openId;
@@ -108,6 +111,7 @@ public class HuaweiLoginManager {
                 observer.onLogout();
             }
         });
+        LocalConfigUtils.putData(DataKeyDef.KEY_AUTO_LOGIN, false);
         GlobalTaskExecutor.getInstance().IO(() -> {
             AccountAuthParams accountAuthParams = new AccountAuthParamsHelper(AccountAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
                     .setMobileNumber()
@@ -116,10 +120,35 @@ public class HuaweiLoginManager {
             try {
                 AccountAuthService service = AccountAuthManager.getService(accountAuthParams);
                 Task<Void> signOut = service.signOut();
-//                signOut.addOnSuccessListener(unused -> {
-//                });
-//                signOut.addOnFailureListener(e -> {
-//                });
+                signOut.addOnSuccessListener(unused -> {
+                });
+            } catch (Exception ignored) {
+            }
+        });
+    }
+
+
+    public void autoLogin() {
+        GlobalTaskExecutor.getInstance().IO().execute(() -> {
+            if (!LocalConfigUtils.getData(DataKeyDef.KEY_AUTO_LOGIN, false)) {
+                return;
+            }
+            AccountAuthParams accountAuthParams = new AccountAuthParamsHelper(AccountAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
+                    .setMobileNumber()
+                    .setAuthorizationCode()
+                    .createParams();
+            try {
+                AccountAuthService service = AccountAuthManager.getService(accountAuthParams);
+                Task<AuthAccount> signIn = service.silentSignIn();
+                signIn.addOnSuccessListener(authAccount -> GlobalTaskExecutor.getInstance().MAIN(() -> {
+                    String openId = authAccount.getOpenId();
+                    if (isNotNullOrEmpty(openId)) {
+                        this.openId = openId;
+                        for (LoginStateObserver observer : observers) {
+                            observer.onLogin();
+                        }
+                    }
+                }));
             } catch (Exception ignored) {
             }
         });

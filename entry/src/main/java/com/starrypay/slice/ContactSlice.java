@@ -72,13 +72,6 @@ public class ContactSlice extends AbilitySlice {
 
         list = (ListContainer) findComponentById(ResourceTable.Id_contentList);
         list.setItemProvider(provider);
-//
-//        ArrayList<ContactBean> dataList = new ArrayList<>();
-//
-//        dataList.add(new ContactBean("18612341234", "爸爸"));
-//        dataList.add(new ContactBean("18612341234", "妈妈"));
-//
-//        provider.refresh(dataList);
 
         list.setBindStateChangedListener(new Component.BindStateChangedListener() {
             @Override

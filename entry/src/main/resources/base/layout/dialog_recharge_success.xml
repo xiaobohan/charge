@@ -4,10 +4,10 @@
     ohos:height="match_content"
     ohos:width="match_parent"
     ohos:orientation="vertical"
-    ohos:alignment="center"
-    ohos:padding="25vp">
+    ohos:alignment="center">
 
     <Text
+        ohos:top_margin="25vp"
         ohos:height="match_content"
         ohos:width="match_content"
         ohos:text="充值成功"
@@ -15,6 +15,8 @@
         ohos:text_size="20fp"/>
 
     <Text
+        ohos:start_padding="25vp"
+        ohos:end_padding="25vp"
         ohos:id="$+id:content"
         ohos:height="match_content"
         ohos:width="match_parent"
@@ -24,6 +26,7 @@
         ohos:top_margin="20vp"/>
 
     <Button
+        ohos:bottom_margin="25vp"
         ohos:id="$+id:ok"
         ohos:height="match_content"
         ohos:width="match_parent"

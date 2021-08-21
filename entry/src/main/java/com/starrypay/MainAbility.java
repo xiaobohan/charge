@@ -1,5 +1,6 @@
 package com.starrypay;
 
+import com.starrypay.login.HuaweiLoginManager;
 import com.starrypay.myapplication.widget.controller.*;
 import com.starrypay.slice.ContactSlice;
 import com.starrypay.slice.MainAbilitySlice;

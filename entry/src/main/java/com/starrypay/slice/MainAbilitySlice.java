@@ -2,6 +2,7 @@ package com.starrypay.slice;
 
 import com.starrypay.component.RechargeLayout;
 import com.starrypay.component.RechargeRecordLayout;
+import com.starrypay.event.ChargeSuccessEvent;
 import com.starrypay.login.HuaweiLoginManager;
 import com.starrypay.myapplication.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
@@ -13,6 +14,8 @@ import ohos.net.NetHandle;
 import ohos.net.NetManager;
 import ohos.net.NetStatusCallback;
 import ohos.security.SystemPermission;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * MainAbility slice
@@ -65,6 +68,10 @@ public class MainAbilitySlice extends AbilitySlice implements RechargeLayout.Rec
         HuaweiLoginManager.getInstance().registerObserver(this);
 
         NetManager.getInstance(this).addDefaultNetStatusCallback(netStatusCallback);
+
+        HuaweiLoginManager.getInstance().autoLogin();
+
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -72,6 +79,8 @@ public class MainAbilitySlice extends AbilitySlice implements RechargeLayout.Rec
         super.onStop();
         HuaweiLoginManager.getInstance().unRegisterObserver(this);
         NetManager.getInstance(this).removeNetStatusCallback(netStatusCallback);
+
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -235,5 +244,13 @@ public class MainAbilitySlice extends AbilitySlice implements RechargeLayout.Rec
 
         dialog.show();
     }
+
+    @Subscribe
+    public void chargeSuccess(ChargeSuccessEvent event) {
+        if (recordLayout != null) {
+            recordLayout.chargeSuccess();
+        }
+    }
+
 
 }

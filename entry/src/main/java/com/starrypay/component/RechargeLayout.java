@@ -8,6 +8,7 @@ import com.huawei.paysdk.entities.PayResult;
 import com.starrypay.WalletUpgradeDialog;
 import com.starrypay.bean.*;
 import com.starrypay.common.NetWatcher;
+import com.starrypay.event.ChargeSuccessEvent;
 import com.starrypay.http.Apis;
 import com.starrypay.http.HttpUtils;
 import com.starrypay.login.HuaweiLoginManager;
@@ -24,6 +25,7 @@ import ohos.agp.window.dialog.CommonDialog;
 import ohos.app.Context;
 import ohos.hiviewdfx.HiLog;
 import ohos.hiviewdfx.HiLogLabel;
+import org.greenrobot.eventbus.EventBus;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,6 +43,7 @@ public class RechargeLayout implements NetWatcher {
     private TextField etPhone;
     private Text textChargeName;
     private Component networkError;
+    private Button btnPay;
 
     private RechargeCallback callback;
 
@@ -89,7 +92,7 @@ public class RechargeLayout implements NetWatcher {
             }
         });
 
-        Button btnPay = (Button) rootView.findComponentById(ResourceTable.Id_btnPay);
+        btnPay = (Button) rootView.findComponentById(ResourceTable.Id_btnPay);
         btnPay.setClickedListener(component -> {
             doPay();
         });
@@ -162,6 +165,7 @@ public class RechargeLayout implements NetWatcher {
     }
 
     public void doPay() {
+        btnPay.setEnabled(false);
         boolean isLogin = HuaweiLoginManager.getInstance().checkIsLogin();
         if (!isLogin) {
             HuaweiLoginManager.getInstance().login(new HuaweiLoginManager.LoginAccountCallback() {
@@ -173,23 +177,28 @@ public class RechargeLayout implements NetWatcher {
 
                 @Override
                 public void onFailed(Throwable throwable) {
-
+                    btnPay.setEnabled(true);
                 }
             });
             return;
         }
         if (mAdapter == null) {
+            btnPay.setEnabled(true);
             return;
         }
         String phone = etPhone.getText().trim();
         if (phone.length() != 11) {
             ToastUtils.showToast("请检查手机号码格式");
+            btnPay.setEnabled(true);
             return;
         }
         PhoneChargeInfoBean item = mAdapter.getSelectItem();
         if (item == null) {
+            btnPay.setEnabled(true);
             return;
         }
+
+        btnPay.setEnabled(false);
 
         HttpUtils.create(Apis.class)
                 .createOrder(new CreateOrderBean(HuaweiLoginManager.getInstance().getOpenId(), item.getGoodsId(), phone))
@@ -203,11 +212,15 @@ public class RechargeLayout implements NetWatcher {
                         } else {
                             onFailure(call, new Exception("server error"));
                         }
+
+                        btnPay.setEnabled(true);
                     }
 
                     @Override
                     public void onFailure(Call<BaseRespBean<OrderInfoBean>> call, Throwable throwable) {
                         ToastUtils.showToast("创建订单失败");
+
+                        btnPay.setEnabled(true);
                     }
                 });
     }
@@ -219,7 +232,10 @@ public class RechargeLayout implements NetWatcher {
                 PayResult payResult = huaweiPay.pay(MercOrderApply.toJson(mercOrderApply));
 
                 if (PayResult.PAY_SUCCESS.equals(payResult.getReturnCode())) {
-                    GlobalTaskExecutor.getInstance().MAIN(this::showRechargeSuccessDialog);
+                    GlobalTaskExecutor.getInstance().MAIN(() -> {
+                        EventBus.getDefault().post(new ChargeSuccessEvent());
+                        showRechargeSuccessDialog();
+                    });
                 } else if (PayResult.PAY_FAIL.equals(payResult.getReturnCode())) {
                     new WalletUpgradeDialog(getRootView().getContext()).show();
                 } else {

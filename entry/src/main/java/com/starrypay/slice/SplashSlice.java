@@ -11,10 +11,10 @@ import ohos.agp.text.RichTextBuilder;
 import ohos.agp.text.TextForm;
 import ohos.agp.utils.Color;
 import ohos.agp.window.dialog.CommonDialog;
+import ohos.multimodalinput.event.KeyEvent;
 import ohos.multimodalinput.event.TouchEvent;
 
 public class SplashSlice extends AbilitySlice {
-
 
     @Override
     public void onStart(Intent intent) {
@@ -25,8 +25,12 @@ public class SplashSlice extends AbilitySlice {
     }
 
     private void showDialog() {
-        CommonDialog dialog = new CommonDialog(this);
-
+        CommonDialog dialog = new CommonDialog(this) {
+            @Override
+            public boolean clickKeyDown(KeyEvent event) {
+                return true;
+            }
+        };
         Component rootLayout = LayoutScatter.getInstance(this).parse(ResourceTable.Layout_dialog_privacy, null, false);
         dialog.setSize(AttrHelper.vp2px(300, this), DirectionalLayout.LayoutConfig.MATCH_CONTENT);
         dialog.setCornerRadius(AttrHelper.vp2px(10, this));
@@ -42,14 +46,11 @@ public class SplashSlice extends AbilitySlice {
         textBuilder.addText("了解详细信息。如您同意，请点击“同意”开始接受我们的服务。");
 
         RichText richText = textBuilder.build();
-        richText.addTouchEventListener(new RichText.TouchEventListener() {
-            @Override
-            public boolean onTouchEvent(Component component, TouchEvent touchEvent) {
-                dialog.destroy();
-                present(new PrivacyAbilitySlice(), new Intent());
-                terminate();
-                return true;
-            }
+        richText.addTouchEventListener((component, touchEvent) -> {
+            dialog.destroy();
+            present(new PrivacyAbilitySlice(), new Intent());
+            terminate();
+            return true;
         }, 67, 73);
 
         Text textContent = (Text) rootLayout.findComponentById(ResourceTable.Id_textContent);
@@ -57,8 +58,7 @@ public class SplashSlice extends AbilitySlice {
 
         Button btnCancel = (Button) rootLayout.findComponentById(ResourceTable.Id_btnCancal);
         btnCancel.setClickedListener(component -> {
-            dialog.destroy();
-            terminate();
+            getAbility().terminateAbility();
         });
         Button btnSubmit = (Button) rootLayout.findComponentById(ResourceTable.Id_btnSubmit);
         btnSubmit.setClickedListener(component -> {
@@ -82,7 +82,6 @@ public class SplashSlice extends AbilitySlice {
     public void onForeground(Intent intent) {
         super.onForeground(intent);
     }
-
 
 }
 

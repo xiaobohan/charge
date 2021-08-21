@@ -21,6 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RechargeRecordLayout implements NetWatcher {
@@ -32,7 +33,7 @@ public class RechargeRecordLayout implements NetWatcher {
     private Component networkError;
     private Component noRecord;
 
-    private AbsItemProvider<RechargeRecordBean> provider = new AbsItemProvider<RechargeRecordBean>() {
+    private final AbsItemProvider<RechargeRecordBean> provider = new AbsItemProvider<RechargeRecordBean>() {
 
         @Override
         public Component getComponent(int i, Component component, ComponentContainer componentContainer) {
@@ -175,9 +176,12 @@ public class RechargeRecordLayout implements NetWatcher {
         try {
             if (isLogin) {
                 dlNoLogin.setVisibility(Component.HIDE);
+                initData();
             } else {
                 dlNoLogin.setVisibility(Component.VISIBLE);
                 noRecord.setVisibility(Component.HIDE);
+
+                provider.refresh(new ArrayList<>());
             }
         } catch (Exception ignored) {
         }
@@ -197,4 +201,7 @@ public class RechargeRecordLayout implements NetWatcher {
         });
     }
 
+    public void chargeSuccess() {
+        initData();
+    }
 }

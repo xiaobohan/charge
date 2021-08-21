@@ -4,6 +4,7 @@ import com.starrypay.myapplication.ResourceTable;
 import ohos.aafwk.ability.AbilitySlice;
 import ohos.aafwk.content.Intent;
 import ohos.agp.components.Component;
+import ohos.multimodalinput.event.KeyEvent;
 
 public class PrivacyAbilitySlice extends AbilitySlice {
 
@@ -12,12 +13,9 @@ public class PrivacyAbilitySlice extends AbilitySlice {
         super.onStart(intent);
         super.setUIContent(ResourceTable.Layout_page_privacy);
 
-        findComponentById(ResourceTable.Id_imageBack).setClickedListener(new Component.ClickedListener() {
-            @Override
-            public void onClick(Component component) {
-                present(new SplashSlice(), intent);
-                terminate();
-            }
+        findComponentById(ResourceTable.Id_imageBack).setClickedListener(component -> {
+            present(new SplashSlice(), new Intent());
+            terminate();
         });
     }
 
@@ -31,6 +29,14 @@ public class PrivacyAbilitySlice extends AbilitySlice {
         super.onForeground(intent);
     }
 
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
+        if (keyCode==KeyEvent.KEY_BACK){
+            present(new SplashSlice(), new Intent());
+            terminate();
+            return true;
+        }
+        return super.onKeyDown(keyCode, keyEvent);
+    }
 }
 
